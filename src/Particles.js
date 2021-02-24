@@ -1,10 +1,12 @@
 import Renderer from 'Renderer';
 
 export default class Particles {
-	constructor(node) {
-		this._node = node;
+	constructor(canvasNode) {
+		this._node = canvasNode;
 
-		this.renderer = new Renderer();
+		this.ctx = this._node.getContext('2d');
+
+		this.renderer = new Renderer(this.ctx);
 
 		this._boundUpdate = this.update.bind(this);
 
