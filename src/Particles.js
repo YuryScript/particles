@@ -18,6 +18,12 @@ export default class Particles {
 
 		this._isRunning = false
 
+		this._linkedParticles
+
+		this._distanceToLink
+
+		this._ticks = 0
+
 		this._viewport = new Rectangle()
 
 		this.processSettings(settings)
@@ -45,26 +51,15 @@ export default class Particles {
 			this.checkBoundary(particle, this._viewport)
 		}
 
-		const lines = [];
-		for (let a = 0; a < this._particleManager.particles.length - 1; a++) {
-			for (let b = a + 1; b < this._particleManager.particles.length; b++) {
-				const maxDistance = 150;
-				const distance = this._particleManager.particles[a].position.distance(this._particleManager.particles[b].position)
-				if (distance < maxDistance) {
-					const line = new Line(
-						Vector2.fromVector(this._particleManager.particles[a].position),
-						Vector2.fromVector(this._particleManager.particles[b].position)
-					)
-					const alpha = 1 - distance / maxDistance
-					line.alpha = alpha
-					lines.push(line)
-				}
-			}
+		let lines;
+		if (this._linkedParticles) {
+			lines = this.linkPartiles()
 		}
 
 		const objectsToRender = [...this._particleManager.particles, ...lines]
 
 		this._renderer.objectsToRender = objectsToRender
+		this._renderer.hue = (this._ticks % 90) * 4
 		this._renderer.render()
 
 		if (this._isRunning) {
@@ -74,6 +69,29 @@ export default class Particles {
 		const endTime = Date.now()
 		const delta = endTime - startTime
 		// console.log("update", delta, "ms")
+
+		this._ticks++
+	}
+
+	linkPartiles() {
+		const lines = [];
+
+		for (let a = 0; a < this._particleManager.particles.length - 1; a++) {
+			for (let b = a + 1; b < this._particleManager.particles.length; b++) {
+				const distance = this._particleManager.particles[a].position.distance(this._particleManager.particles[b].position)
+				if (distance < this._distanceToLink) {
+					const line = new Line(
+						Vector2.fromVector(this._particleManager.particles[a].position),
+						Vector2.fromVector(this._particleManager.particles[b].position)
+					)
+					const alpha = 1 - distance / this._distanceToLink
+					line.alpha = alpha
+					lines.push(line)
+				}
+			}
+		}
+
+		return lines;
 	}
 
 	setSize(width, height) {
@@ -85,6 +103,10 @@ export default class Particles {
 	}
 
 	processSettings(settings) {
+		this._linkedParticles = settings.particles.linkedParticles
+
+		this._distanceToLink = settings.particles.distanceToLink
+
 		this._particleManager = new ParticleManager(settings.particles.amount)
 
 		this._particleManager.generateParticlesRandomly(settings.renderer.width, settings.renderer.height, 1, 1)

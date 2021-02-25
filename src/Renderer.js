@@ -12,6 +12,8 @@ export default class Renderer {
 
     this._transparentBackground = false
 
+    this.hue = 0
+
     this._backgroundColor = backgroundColor
   }
 
@@ -31,6 +33,7 @@ export default class Renderer {
     if (this._transparentBackground) {
       this._ctx.clearRect()
     } else {
+      this._backgroundColor = `hsl(${this.hue},95%,20%)`
       this._ctx.fillStyle = this._backgroundColor
       this._ctx.fillRect(0, 0, this._viewportSize.x, this._viewportSize.y)
     }

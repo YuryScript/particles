@@ -4,9 +4,11 @@ const node = document.getElementById("particles")
 
 window.particles = new Particles(node, {
   particles: {
-    amount: 200, // number
+    amount: 100, // number
     color: "#fff", // string
     createStrategy: "random", // 'random'
+    distanceToLink: 150, // number
+    linkedParticles: true, // boolean
   },
   renderer: {
     transparentBackground: false, // boolean
