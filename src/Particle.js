@@ -1,52 +1,52 @@
-import Vector2 from "./Vector2";
-import Random from "./Random";
+import Vector2 from "./Vector2"
+import Random from "./Random"
 
 export class Particle {
   constructor() {
-    this.position = new Vector2();
+    this.position = new Vector2()
 
-    this.velocity = new Vector2();
+    this.velocity = new Vector2()
 
-    this.active = false;
+    this.active = false
 
-    this.radius = 3;
+    this.radius = 3
   }
 }
 
 export class ParticlePool {
   constructor(size) {
-    this.particles = new Array(size);
+    this.particles = new Array(size)
 
-    this.init(0, size);
+    this.init(0, size)
   }
   /** [min, max) */
   init(min, max) {
     for (let i = min; i < max; i++) {
-      this.particles[i] = new Particle();
+      this.particles[i] = new Particle()
     }
 
-    return this;
+    return this
   }
 
   resize(newSize) {
     if (this.particles.length === newSize) {
-      return;
+      return
     }
 
-    const oldSize = this.particles.length;
-    this.particles.length = newSize;
+    const oldSize = this.particles.length
+    this.particles.length = newSize
 
     if (oldSize > newSize) {
-      this.init(oldSize, newSize);
+      this.init(oldSize, newSize)
     }
 
-    return this;
+    return this
   }
 
   generateParticleRandomly(maxX, maxY, maxVX, maxVY) {
     for (const particle of this.particles) {
-      particle.position.set(Random.intBetween(maxX), Random.intBetween(maxY));
-      particle.velocity.set(Random.floatBetween(-maxVX, maxVX), Random.floatBetween(-maxVY, maxVY));
+      particle.position.set(Random.intBetween(maxX), Random.intBetween(maxY))
+      particle.velocity.set(Random.floatBetween(-maxVX, maxVX), Random.floatBetween(-maxVY, maxVY))
     }
   }
 }

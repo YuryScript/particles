@@ -1,8 +1,8 @@
-import Particles from "../../src/Particles";
+import Particles from "../../src/Particles"
 
-const node = document.getElementById("particles");
+const node = document.getElementById("particles")
 
-const particles = new Particles(node, {
+window.particles = new Particles(node, {
   particles: {
     amount: 100, // number
     color: "#fff", // string
@@ -14,4 +14,4 @@ const particles = new Particles(node, {
     width: window.innerWidth, // string
     height: window.innerHeight, // string
   },
-});
+})
