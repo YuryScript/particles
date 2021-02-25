@@ -1,76 +1,71 @@
 import Renderer from "./Renderer";
 import { Particle, ParticlePool } from "./Particle";
+import Vector2 from "./Vector2";
 
 export default class Particles {
-  constructor(canvas, settings) {
-    this._canvas = canvas;
+	constructor(canvas, settings) {
+		this._canvas = canvas;
 
-    this._settings = settings || {
-      particles: {
-        amount: 100, // number
-        color: "#fff", // string
-        createStrategy: "random", // 'random'
-      },
-      renderer: {
-        transparentBackground: false, // boolean
-        backgroundColor: "#000", // string
-        width: 800, // number
-        height: 600, // number
-      },
-    };
+		this.ctx = this._canvas.getContext("2d");
 
-    this.ctx = this._canvas.getContext("2d");
+		this._pool = null;
 
-    this._pool = new ParticlePool(this._settings.particles.amount);
+		this._renderer = null;
 
-    this.renderer = new Renderer(this.ctx, this._pool.particles);
+		this._boundUpdate = this.update.bind(this);
 
-    this._boundUpdate = this.update.bind(this);
+		this._isRunning = false;
 
-    this._isRunning = false;
+		this.processSettings(settings);
 
-    this._timestamp;
+		this.start();
+		console.log("Particles started!");
+	}
 
-    this.setSize(this._settings.renderer.width, this._settings.renderer.height);
+	start() {
+		this._isRunning = true;
+		window.requestAnimationFrame(this._boundUpdate);
+	}
 
-    this.start();
-    console.log("Particles started!");
-  }
+	stop() {
+		this._isRunning = false;
+	}
 
-  start() {
-    this._isRunning = true;
-    window.requestAnimationFrame(this._boundUpdate);
-  }
+	update() {
+		const startTime = Date.now();
 
-  stop() {
-    this._isRunning = false;
-  }
+		for (const particle of this._pool.particles) {
+			particle.position.x += particle.velocity.x;
+			particle.position.y += particle.velocity.y;
+		}
 
-  update() {
-    const currentTime = Date.now();
-    if (!this._timestamp) {
-      this._timestamp = currentTime;
-    }
-    const delta = currentTime - this._timestamp;
-    this._timestamp = currentTime;
-    // console.log("update", delta, "ms");
+		this._renderer.render();
 
-    for (const particle of this._pool.particles) {
-      particle.position.x += particle.velocity.x;
-      particle.position.y += particle.velocity.y;
-    }
+		if (this._isRunning) {
+			window.requestAnimationFrame(this._boundUpdate);
+		}
 
-    this.renderer.render();
+		const endTime = Date.now();
+		const delta = endTime - startTime;
+		console.log("update", delta, "ms");
+	}
 
-    if (this._isRunning) {
-      window.requestAnimationFrame(this._boundUpdate);
-    }
-  }
+	setSize(width, height) {
+		this._canvas.width = width;
+		this._canvas.height = height;
 
-  setSize(width, height) {
-    this._settings.renderer.width = width;
-    this._settings.renderer.height = height;
-    this._canvas.width = width;
-    this._canvas.height = height;
-  }
+		this._renderer.viewportSize = new Vector2(width, height);
+	}
+
+	processSettings(settings) {
+		console.log(settings);
+
+		this._pool = new ParticlePool(settings.particles.amount);
+
+		this._pool.generateParticleRandomly(settings.renderer.width, settings.renderer.height, 4, 4);
+
+		this._renderer = new Renderer(this.ctx, this._pool.particles, settings.renderer.backgroundColor);
+
+		this.setSize(settings.renderer.width, settings.renderer.height);
+	}
 }

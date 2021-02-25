@@ -10,7 +10,7 @@ const particles = new Particles(node, {
   },
   renderer: {
     transparentBackground: false, // boolean
-    backgroundColor: "#000", // string
+    backgroundColor: "#186cb6", // string
     width: window.innerWidth, // string
     height: window.innerHeight, // string
   },

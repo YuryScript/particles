@@ -1,24 +1,30 @@
-export default class Renderer {
-  constructor(ctx, objectsToRender = []) {
-    this.ctx = ctx;
+import Vector2 from "./Vector2";
 
-    this.camera = null;
+export default class Renderer {
+  constructor(ctx, objectsToRender = [], backgroundColor = '#000', viewportSize = new Vector2(300, 150)) {
+    this._ctx = ctx;
 
     this._objectsToRender = objectsToRender;
 
     this._renderList;
 
+    this._viewportSize = viewportSize;
+
     this._transparentBackground = false;
 
-    this._backgroundColor = "#000";
+    this._backgroundColor = backgroundColor;
+  }
+
+  set viewportSize(value) {
+    this._viewportSize = value;
   }
 
   render() {
     if (this._transparentBackground) {
-      this.ctx.clearRect();
+      this._ctx.clearRect();
     } else {
-      this.ctx.fillStyle = this._backgroundColor;
-      this.ctx.fillRect(0, 0, 100, 100);
+      this._ctx.fillStyle = this._backgroundColor;
+      this._ctx.fillRect(0, 0, this._viewportSize.x, this._viewportSize.y);
     }
 
     // TODO: filter objectsToRender
@@ -26,11 +32,11 @@ export default class Renderer {
 
     for (const object of this._renderList) {
       this.drawCircle(
-        this.ctx,
+        this._ctx,
         object.position.x,
         object.position.y,
         object.radius,
-        "#ccc"
+        "#fff"
       );
     }
   }

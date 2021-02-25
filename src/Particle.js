@@ -1,4 +1,5 @@
 import Vector2 from "./Vector2";
+import Random from "./Random";
 
 export class Particle {
   constructor() {
@@ -8,7 +9,7 @@ export class Particle {
 
     this.active = false;
 
-    this.radius = 2;
+    this.radius = 3;
   }
 }
 
@@ -40,5 +41,12 @@ export class ParticlePool {
     }
 
     return this;
+  }
+
+  generateParticleRandomly(maxX, maxY, maxVX, maxVY) {
+    for (const particle of this.particles) {
+      particle.position.set(Random.intBetween(maxX), Random.intBetween(maxY));
+      particle.velocity.set(Random.floatBetween(-maxVX, maxVX), Random.floatBetween(-maxVY, maxVY));
+    }
   }
 }
