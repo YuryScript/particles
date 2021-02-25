@@ -13,7 +13,7 @@ export class Particle {
   }
 }
 
-export class ParticlePool {
+export class ParticleManager {
   constructor(size) {
     this.particles = new Array(size)
 
@@ -43,7 +43,7 @@ export class ParticlePool {
     return this
   }
 
-  generateParticleRandomly(maxX, maxY, maxVX, maxVY) {
+  generateParticlesRandomly(maxX, maxY, maxVX, maxVY) {
     for (const particle of this.particles) {
       particle.position.set(Random.intBetween(maxX), Random.intBetween(maxY))
       particle.velocity.set(Random.floatBetween(-maxVX, maxVX), Random.floatBetween(-maxVY, maxVY))

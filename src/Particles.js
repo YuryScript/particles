@@ -1,7 +1,8 @@
 import Renderer from "./Renderer"
-import { ParticlePool } from "./Particle"
+import { ParticleManager } from "./Particle"
 import Vector2 from "./Vector2"
 import Rectangle from "./Rect"
+import Line from "./Line"
 
 export default class Particles {
 	constructor(canvas, settings) {
@@ -9,7 +10,7 @@ export default class Particles {
 
 		this.ctx = this._canvas.getContext("2d")
 
-		this._pool = null
+		this._particleManager = null
 
 		this._renderer = null
 
@@ -37,13 +38,33 @@ export default class Particles {
 	update() {
 		const startTime = Date.now()
 
-		for (const particle of this._pool.particles) {
+		for (const particle of this._particleManager.particles) {
 			particle.position.x += particle.velocity.x
 			particle.position.y += particle.velocity.y
 
 			this.checkBoundary(particle, this._viewport)
 		}
 
+		const lines = [];
+		for (let a = 0; a < this._particleManager.particles.length - 1; a++) {
+			for (let b = a + 1; b < this._particleManager.particles.length; b++) {
+				const maxDistance = 150;
+				const distance = this._particleManager.particles[a].position.distance(this._particleManager.particles[b].position)
+				if (distance < maxDistance) {
+					const line = new Line(
+						Vector2.fromVector(this._particleManager.particles[a].position),
+						Vector2.fromVector(this._particleManager.particles[b].position)
+					)
+					const alpha = 1 - distance / maxDistance
+					line.alpha = alpha
+					lines.push(line)
+				}
+			}
+		}
+
+		const objectsToRender = [...this._particleManager.particles, ...lines]
+
+		this._renderer.objectsToRender = objectsToRender
 		this._renderer.render()
 
 		if (this._isRunning) {
@@ -64,11 +85,11 @@ export default class Particles {
 	}
 
 	processSettings(settings) {
-		this._pool = new ParticlePool(settings.particles.amount)
+		this._particleManager = new ParticleManager(settings.particles.amount)
 
-		this._pool.generateParticleRandomly(settings.renderer.width, settings.renderer.height, 2, 2)
+		this._particleManager.generateParticlesRandomly(settings.renderer.width, settings.renderer.height, 1, 1)
 
-		this._renderer = new Renderer(this.ctx, this._pool.particles, settings.renderer.backgroundColor)
+		this._renderer = new Renderer(this.ctx, this._particleManager.particles, settings.renderer.backgroundColor)
 
 		this.setSize(settings.renderer.width, settings.renderer.height)
 	}

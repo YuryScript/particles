@@ -6,7 +6,7 @@ export default class Line {
 		this.b = b
 	}
 
-	length(line) {
-		return Math.sqrt((line.b.x - line.a.x) * (line.b.x - line.a.x) + (line.b.y - line.a.y) * (line.b.y - line.a.y));
+	length() {
+		return Math.sqrt((this.b.x - this.a.x) * (this.b.x - this.a.x) + (this.b.y - this.a.y) * (this.b.y - this.a.y))
 	}
 }

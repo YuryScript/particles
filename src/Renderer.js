@@ -8,8 +8,6 @@ export default class Renderer {
 
     this._objectsToRender = objectsToRender
 
-    this._renderList
-
     this._viewportSize = viewportSize
 
     this._transparentBackground = false
@@ -21,6 +19,14 @@ export default class Renderer {
     this._viewportSize = value
   }
 
+  get objectsToRender() {
+    return this._objectsToRender
+  }
+
+  set objectsToRender(value) {
+    this._objectsToRender = value
+  }
+
   render() {
     if (this._transparentBackground) {
       this._ctx.clearRect()
@@ -29,28 +35,26 @@ export default class Renderer {
       this._ctx.fillRect(0, 0, this._viewportSize.x, this._viewportSize.y)
     }
 
-    // TODO: filter objectsToRender
-    this._renderList = this._objectsToRender
-
-    for (const object of this._renderList) {
+    for (const object of this._objectsToRender) {
       if (object instanceof Particle) {
         this.drawCircle(
           this._ctx,
           object.position.x,
           object.position.y,
           object.radius,
-          "#fff"
+          `rgba(255,255,255,0.5)`
         )
-        continue;
+        continue
       }
 
       if (object instanceof Line) {
-        ctx.strokeStyle = color
-        ctx.lineWidth = 2
-        ctx.beginPath()
-        ctx.moveTo(object.a.x, object.a.y)
-        ctx.lineTo(object.b.x, object.b.y)
-        ctx.stroke()
+        this._ctx.strokeStyle = `rgba(255,255,255,${object.alpha})`
+        this._ctx.lineWidth = 1
+        this._ctx.beginPath()
+        this._ctx.moveTo(object.a.x, object.a.y)
+        this._ctx.lineTo(object.b.x, object.b.y)
+        this._ctx.stroke()
+        continue
       }
     }
   }
