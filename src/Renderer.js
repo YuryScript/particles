@@ -1,3 +1,5 @@
+import Line from "./Line"
+import { Particle } from "./Particle"
 import Vector2 from "./Vector2"
 
 export default class Renderer {
@@ -31,13 +33,25 @@ export default class Renderer {
     this._renderList = this._objectsToRender
 
     for (const object of this._renderList) {
-      this.drawCircle(
-        this._ctx,
-        object.position.x,
-        object.position.y,
-        object.radius,
-        "#fff"
-      )
+      if (object instanceof Particle) {
+        this.drawCircle(
+          this._ctx,
+          object.position.x,
+          object.position.y,
+          object.radius,
+          "#fff"
+        )
+        continue;
+      }
+
+      if (object instanceof Line) {
+        ctx.strokeStyle = color
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.moveTo(object.a.x, object.a.y)
+        ctx.lineTo(object.b.x, object.b.y)
+        ctx.stroke()
+      }
     }
   }
 

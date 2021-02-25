@@ -1,5 +1,5 @@
 import Renderer from "./Renderer"
-import { Particle, ParticlePool } from "./Particle"
+import { ParticlePool } from "./Particle"
 import Vector2 from "./Vector2"
 import Rectangle from "./Rect"
 
@@ -61,13 +61,12 @@ export default class Particles {
 
 		this._renderer.viewportSize = new Vector2(width, height)
 		this._viewport.set(0, 0, width, height)
-		console.log(this._viewport.top, this._viewport.right, this._viewport.bottom, this._viewport.left);
 	}
 
 	processSettings(settings) {
 		this._pool = new ParticlePool(settings.particles.amount)
 
-		this._pool.generateParticleRandomly(settings.renderer.width, settings.renderer.height, 3, 3)
+		this._pool.generateParticleRandomly(settings.renderer.width, settings.renderer.height, 2, 2)
 
 		this._renderer = new Renderer(this.ctx, this._pool.particles, settings.renderer.backgroundColor)
 
