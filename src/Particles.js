@@ -24,6 +24,8 @@ export default class Particles {
 
 		this._ticks = 0
 
+		this._deltas = []
+
 		this._viewport = new Rectangle()
 
 		this.processSettings(settings)
@@ -56,21 +58,24 @@ export default class Particles {
 			lines = this.linkPartiles()
 		}
 
-		const objectsToRender = [...this._particleManager.particles, ...lines]
-
-		this._renderer.objectsToRender = objectsToRender
-		this._renderer.hue = (this._ticks % 90) * 4
+		this._renderer.particles = this._particleManager.particles
+		this._renderer.lines = lines
+		this._renderer.deltas = this._deltas
 		this._renderer.render()
 
 		if (this._isRunning) {
 			window.requestAnimationFrame(this._boundUpdate)
 		}
 
+		this._ticks++
+
 		const endTime = Date.now()
 		const delta = endTime - startTime
+		this._deltas.push(delta)
+		if(this._deltas.length > 200) {
+			this._deltas.shift()
+		}
 		// console.log("update", delta, "ms")
-
-		this._ticks++
 	}
 
 	linkPartiles() {
@@ -111,7 +116,7 @@ export default class Particles {
 
 		this._particleManager.generateParticlesRandomly(settings.renderer.width, settings.renderer.height, 1, 1)
 
-		this._renderer = new Renderer(this.ctx, this._particleManager.particles, settings.renderer.backgroundColor)
+		this._renderer = new Renderer(this.ctx, settings.renderer.backgroundColor)
 
 		this.setSize(settings.renderer.width, settings.renderer.height)
 	}
