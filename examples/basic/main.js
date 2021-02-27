@@ -3,6 +3,7 @@ import Particles from "../../src/Particles"
 const node = document.getElementById("particles")
 
 window.particles = new Particles(node, {
+  debug: true,
   particles: {
     amount: 200, // number
     color: "#fff", // string
