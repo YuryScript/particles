@@ -10,7 +10,9 @@ export default class Renderer {
 
     this.lines = []
 
-    this.deltas = 0;
+    this.deltas
+
+    this._debug
 
     this._viewportSize = viewportSize
 
@@ -49,7 +51,9 @@ export default class Renderer {
       this._ctx.stroke()
     }
     
-    this.drawPerformanceGraphic()
+    if(this._debug) {
+      this.drawPerformanceGraphic()
+    }
   }
 
   drawCircle(ctx, x, y, radius, color) {

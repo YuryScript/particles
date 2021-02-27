@@ -26,6 +26,8 @@ export default class Particles {
 
 		this._deltas = []
 
+		this._debug = false
+
 		this._viewport = new Rectangle()
 
 		this.processSettings(settings)
@@ -53,7 +55,7 @@ export default class Particles {
 			this.checkBoundary(particle, this._viewport)
 		}
 
-		let lines;
+		let lines
 		if (this._linkedParticles) {
 			lines = this.linkPartiles()
 		}
@@ -75,11 +77,10 @@ export default class Particles {
 		if(this._deltas.length > 200) {
 			this._deltas.shift()
 		}
-		// console.log("update", delta, "ms")
 	}
 
 	linkPartiles() {
-		const lines = [];
+		const lines = []
 
 		for (let a = 0; a < this._particleManager.particles.length - 1; a++) {
 			for (let b = a + 1; b < this._particleManager.particles.length; b++) {
@@ -96,7 +97,7 @@ export default class Particles {
 			}
 		}
 
-		return lines;
+		return lines
 	}
 
 	setSize(width, height) {
@@ -105,6 +106,15 @@ export default class Particles {
 
 		this._renderer.viewportSize = new Vector2(width, height)
 		this._viewport.set(0, 0, width, height)
+	}
+
+	get debug() {
+		return this._debug
+	}
+
+	set debug(v) {
+		this._debug = v
+		this._renderer._debug = v
 	}
 
 	processSettings(settings) {
@@ -119,6 +129,8 @@ export default class Particles {
 		this._renderer = new Renderer(this.ctx, settings.renderer.backgroundColor)
 
 		this.setSize(settings.renderer.width, settings.renderer.height)
+
+		this.debug = settings.debug
 	}
 
 	checkBoundary(particle, boundary) {
