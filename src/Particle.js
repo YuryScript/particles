@@ -9,7 +9,7 @@ export class Particle {
 
     this.active = false
 
-    this.radius = 3
+    this.radius = 1
   }
 }
 
@@ -19,6 +19,13 @@ export class ParticleManager {
 
     this.init(0, size)
   }
+  
+  createPatilce() {
+    const newParticle = new Particle()
+    this.particles.push(newParticle)
+    return newParticle
+  }
+
   /** [min, max) */
   init(min, max) {
     for (let i = min; i < max; i++) {
@@ -43,10 +50,11 @@ export class ParticleManager {
     return this
   }
 
-  generateParticlesRandomly(maxX, maxY, maxVX, maxVY) {
+  generateParticlesRandomly(maxX, maxY, offset, maxVX, maxVY, maxRadius) {
     for (const particle of this.particles) {
-      particle.position.set(Random.intBetween(maxX), Random.intBetween(maxY))
+      particle.position.set(Random.intBetween(-offset, maxX + offset), Random.intBetween(-offset, maxY + offset))
       particle.velocity.set(Random.floatBetween(-maxVX, maxVX), Random.floatBetween(-maxVY, maxVY))
+      particle.radius = Random.floatBetween(0.2, maxRadius)
     }
   }
 }

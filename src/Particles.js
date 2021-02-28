@@ -24,7 +24,7 @@ export default class Particles {
 
 		this._ticks = 0
 
-		this._deltas = []
+		this._deltas = new Array(200)
 
 		this._debug = false
 
@@ -52,7 +52,7 @@ export default class Particles {
 			particle.position.x += particle.velocity.x
 			particle.position.y += particle.velocity.y
 
-			this.checkBoundary(particle, this._viewport)
+			this.checkBoundary(particle, this._viewport, this._distanceToLink)
 		}
 
 		let lines
@@ -74,9 +74,11 @@ export default class Particles {
 		const endTime = Date.now()
 		const delta = endTime - startTime
 		this._deltas.push(delta)
-		if(this._deltas.length > 200) {
+		if(this._deltas.length > this._deltas.length - 1) {
 			this._deltas.shift()
 		}
+		const a = this._deltas.filter((v) => v !== undefined)
+		// console.info(Math.min(...a), Math.max(...a))
 	}
 
 	linkPartiles() {
@@ -124,30 +126,38 @@ export default class Particles {
 
 		this._particleManager = new ParticleManager(settings.particles.amount)
 
-		this._particleManager.generateParticlesRandomly(settings.renderer.width, settings.renderer.height, 1, 1)
+		this._particleManager.generateParticlesRandomly(
+			settings.renderer.width,
+			settings.renderer.height,
+			this._distanceToLink,
+			settings.particles.maxVelocity,
+			settings.particles.maxVelocity,
+			settings.particles.maxRadius,
+		)
 
 		this._renderer = new Renderer(this.ctx, settings.renderer.backgroundColor)
 
 		this.setSize(settings.renderer.width, settings.renderer.height)
 
 		this.debug = settings.debug
+			
 	}
 
-	checkBoundary(particle, boundary) {
-		if (particle.position.x < boundary.left) {
-			particle.position.x = boundary.right
+	checkBoundary(particle, boundary, offset) {
+		if (particle.position.x < boundary.left - offset) {
+			particle.position.x = boundary.right + offset
 		}
 
-		if (particle.position.x > boundary.right) {
-			particle.position.x = boundary.left
+		if (particle.position.x > boundary.right + offset) {
+			particle.position.x = boundary.left - offset
 		}
 
-		if (particle.position.y < boundary.top) {
-			particle.position.y = boundary.bottom
+		if (particle.position.y < boundary.top - offset) {
+			particle.position.y = boundary.bottom + offset
 		}
 
-		if (particle.position.y > boundary.bottom) {
-			particle.position.y = boundary.top
+		if (particle.position.y > boundary.bottom + offset) {
+			particle.position.y = boundary.top - offset
 		}
 	}
 }

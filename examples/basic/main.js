@@ -2,14 +2,16 @@ import Particles from "../../src/Particles"
 
 const node = document.getElementById("particles")
 
-window.particles = new Particles(node, {
+const particles = new Particles(node, {
   debug: true,
   particles: {
-    amount: 200, // number
+    amount: 220, // number
     color: "#fff", // string
     createStrategy: "random", // 'random'
     distanceToLink: 150, // number
     linkedParticles: true, // boolean
+    maxVelocity: 0.8, // number
+    maxRadius: 4 // number
   },
   renderer: {
     transparentBackground: false, // boolean
@@ -18,3 +20,5 @@ window.particles = new Particles(node, {
     height: window.innerHeight, // string
   },
 })
+
+window.particles = particles
