@@ -1,5 +1,5 @@
 {
-  "name": "particles-js",
+  "name": "spark-particles",
   "version": "0.1.0",
   "description": "Lightweight and fast Particle library written in JavaScript",
   "main": "./build/src/Particles.js",
@@ -29,6 +29,5 @@
   "bugs": {
     "url": "https://github.com/GellTorn/particles/issues"
   },
-  "homepage": "https://github.com/GellTorn/particles#readme",
-  "dependencies": {}
+  "homepage": "https://github.com/GellTorn/particles#readme"
 }
