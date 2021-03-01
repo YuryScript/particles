@@ -1,8 +1,8 @@
-import Renderer from "./Renderer"
-import { ParticleManager } from "./Particle"
-import Vector2 from "./Vector2"
-import Rectangle from "./Rect"
-import Line from "./Line"
+import Renderer from "./Renderer.js"
+import { ParticleManager } from "./Particle.js"
+import Vector2 from "./Vector2.js"
+import Rectangle from "./Rect.js"
+import Line from "./Line.js"
 
 export default class Particles {
 	constructor(canvas, settings) {

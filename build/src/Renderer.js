@@ -1,6 +1,6 @@
-import Line from "./Line"
-import { Particle } from "./Particle"
-import Vector2 from "./Vector2"
+import Line from "./Line.js"
+import { Particle } from "./Particle.js"
+import Vector2 from "./Vector2.js"
 
 export default class Renderer {
   constructor(ctx, backgroundColor = '#000', viewportSize = new Vector2(300, 150)) {

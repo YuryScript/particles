@@ -1,12 +1,11 @@
 {
-  "name": "particles",
-  "version": "0.0.1",
-  "description": "Particle library written in JavaScript",
-  "main": "index.js",
+  "name": "particles-js",
+  "version": "0.1.0",
+  "description": "Lightweight and fast Particle library written in JavaScript",
+  "main": "./build/src/Particles.js",
   "scripts": {
     "start": "snowpack dev",
-    "build": "snowpack build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "snowpack build"
   },
   "repository": {
     "type": "git",
@@ -15,9 +14,17 @@
   "keywords": [
     "canvas",
     "particles",
-    "particle"
+    "particle",
+    "particles.js",
+    "particlesjs",
+    "particles-js",
+    "jsparticles",
+    "html",
+    "html5",
+    "web",
+    "background"
   ],
-  "author": "Yury Petrov",
+  "author": "https://github.com/GellTorn",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/GellTorn/particles/issues"

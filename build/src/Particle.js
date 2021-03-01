@@ -1,5 +1,5 @@
-import Vector2 from "./Vector2"
-import Random from "./Random"
+import Vector2 from "./Vector2.js"
+import Random from "./Random.js"
 
 export class Particle {
   constructor() {
