@@ -1,10 +1,50 @@
 # Particles
-Particle library written in JavaScript
+Lightweight and fast Particle library written in JavaScript
 ## Installation
-1. `npm install`
-2. 
+1. `npm install particles-js`
+2. Done!
 ## Usage
-TODO: Write usage instructions
+See Basic example
+
+```javascript
+import Particles from "particles-js"
+
+const node = document.getElementById("particles")
+
+const particles = new Particles(node, {
+  debug: false, // boolean
+  particles: {
+    amount: 250, // number
+    color: "#fff", // color
+    createStrategy: "random", // 'random'
+    distanceToLink: 150, // number
+    linkedParticles: true, // boolean
+    maxVelocity: 0.8, // number
+    maxRadius: 4 // number
+  },
+  staticParticles: [
+    [0.4, 0.4],
+    [0.6, 0.4],
+    [0.4, 0.6],
+    [0.6, 0.6],
+  ],
+  renderer: {
+    transparentBackground: false, // boolean
+    backgroundColor: "#186cb6", // color
+    linearGradient: {
+      x1: 0, // number
+      y1: 0, // number
+      x2: 1, // number
+      y2: 1, // number
+      color1: '#327fc2', // color
+      color2: '#014987', // color
+    },
+    width: window.innerWidth, // string
+    height: window.innerHeight, // string
+  },
+})
+
+```
 ## Contributing
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
