@@ -1,6 +1,6 @@
 {
   "name": "particles",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Particle library written in JavaScript",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "particles",
     "particle"
   ],
-  "author": "Yury Petrov",
+  "author": "https://github.com/GellTorn",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/GellTorn/particles/issues"
