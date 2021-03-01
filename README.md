@@ -1,13 +1,13 @@
-# Particles
+# Spark Particles
 Lightweight and fast Particle library written in JavaScript
 ## Installation
-1. `npm install particles-js`
+1. `npm i spark-particles`
 2. Done!
 ## Usage
 See Basic example
 
 ```javascript
-import Particles from "particles-js"
+import Particles from "spark-particles"
 
 const node = document.getElementById("particles")
 
