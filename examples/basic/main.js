@@ -3,7 +3,7 @@ import Particles from "../../src/Particles"
 const node = document.getElementById("particles")
 
 const particles = new Particles(node, {
-  debug: true,
+  debug: false, // boolean
   particles: {
     amount: 250, // number
     color: "#fff", // color
