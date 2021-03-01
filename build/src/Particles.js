@@ -48,7 +48,8 @@ export default class Particles {
 	update() {
 		const startTime = Date.now()
 
-		for (const particle of this._particleManager.particles) {
+		const activeParticles = this._particleManager.particles.filter((p) => p.active)
+		for (const particle of activeParticles) {
 			particle.position.x += particle.velocity.x
 			particle.position.y += particle.velocity.y
 
@@ -57,7 +58,7 @@ export default class Particles {
 
 		let lines
 		if (this._linkedParticles) {
-			lines = this.linkPartiles()
+			lines = this.linkPartiles(this._particleManager.particles, this._distanceToLink)
 		}
 
 		this._renderer.particles = this._particleManager.particles
@@ -81,18 +82,18 @@ export default class Particles {
 		// console.info(Math.min(...a), Math.max(...a))
 	}
 
-	linkPartiles() {
+	linkPartiles(particles, distanceToLink) {
 		const lines = []
 
-		for (let a = 0; a < this._particleManager.particles.length - 1; a++) {
-			for (let b = a + 1; b < this._particleManager.particles.length; b++) {
-				const distance = this._particleManager.particles[a].position.distance(this._particleManager.particles[b].position)
-				if (distance < this._distanceToLink) {
+		for (let a = 0; a < particles.length - 1; a++) {
+			for (let b = a + 1; b < particles.length; b++) {
+				const distance = particles[a].position.distance(particles[b].position)
+				if (distance < distanceToLink) {
 					const line = new Line(
-						Vector2.fromVector(this._particleManager.particles[a].position),
-						Vector2.fromVector(this._particleManager.particles[b].position)
+						Vector2.fromVector(particles[a].position),
+						Vector2.fromVector(particles[b].position)
 					)
-					const alpha = 1 - distance / this._distanceToLink
+					const alpha = 1 - distance / distanceToLink
 					line.alpha = alpha
 					lines.push(line)
 				}
@@ -135,9 +136,31 @@ export default class Particles {
 			settings.particles.maxRadius,
 		)
 
+		if(settings.staticParticles) {
+			for(const coords of settings.staticParticles) {
+				const p = this._particleManager.createParticle()
+				p.active = false
+				p.radius = 0
+				p.position.set(settings.renderer.width * coords[0], settings.renderer.height * coords[1])
+			}
+		}
+
 		this._renderer = new Renderer(this.ctx, settings.renderer.backgroundColor)
 
 		this.setSize(settings.renderer.width, settings.renderer.height)
+
+		if(settings.renderer.linearGradient) {
+			const gradient = this.ctx.createLinearGradient(
+				settings.renderer.width * settings.renderer.linearGradient.x1,
+				settings.renderer.height * settings.renderer.linearGradient.y1,
+				settings.renderer.width * settings.renderer.linearGradient.x2,
+				settings.renderer.height * settings.renderer.linearGradient.y2,
+			);
+			gradient.addColorStop(0, settings.renderer.linearGradient.color1);
+			gradient.addColorStop(1, settings.renderer.linearGradient.color2);
+			this._renderer.gradient = gradient;
+			console.log(1, gradient)
+		}
 
 		this.debug = settings.debug
 			
