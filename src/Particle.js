@@ -7,7 +7,9 @@ export class Particle {
 
     this.velocity = new Vector2()
 
-    this.active = false
+    this.active = true
+
+    this.letter;
 
     this.radius = 1
   }
@@ -20,7 +22,7 @@ export class ParticleManager {
     this.init(0, size)
   }
   
-  createPatilce() {
+  createParticle() {
     const newParticle = new Particle()
     this.particles.push(newParticle)
     return newParticle
@@ -30,21 +32,6 @@ export class ParticleManager {
   init(min, max) {
     for (let i = min; i < max; i++) {
       this.particles[i] = new Particle()
-    }
-
-    return this
-  }
-
-  resize(newSize) {
-    if (this.particles.length === newSize) {
-      return
-    }
-
-    const oldSize = this.particles.length
-    this.particles.length = newSize
-
-    if (oldSize > newSize) {
-      this.init(oldSize, newSize)
     }
 
     return this

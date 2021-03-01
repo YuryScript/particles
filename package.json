@@ -1,5 +1,5 @@
 {
-  "name": "particles",
+  "name": "particles-js",
   "version": "0.1.0",
   "description": "Particle library written in JavaScript",
   "main": "index.js",
