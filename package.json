@@ -30,5 +30,9 @@
   "bugs": {
     "url": "https://github.com/GellTorn/particles/issues"
   },
-  "homepage": "https://github.com/GellTorn/particles#readme"
+  "homepage": "https://github.com/GellTorn/particles#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "snowpack": "^3.0.13"
+  }
 }
