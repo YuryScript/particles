@@ -5,7 +5,9 @@
   "main": "./build/src/Particles.js",
   "scripts": {
     "start": "snowpack dev",
-    "build": "snowpack build"
+    "build": "snowpack build",
+    "release": "npm publish ./build",
+    "postbuild": "node ./scripts/postbuild.js"
   },
   "repository": {
     "type": "git",
