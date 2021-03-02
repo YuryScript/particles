@@ -1,5 +1,13 @@
 # Spark Particles
+![version](https://img.shields.io/npm/v/spark-particles)
+![license](https://img.shields.io/npm/l/spark-particles)
+![language](https://img.shields.io/github/languages/top/gelltorn/particles)
+![issues](https://img.shields.io/github/issues/gelltorn/particles)
+
 Lightweight and fast Particle library written in JavaScript
+
+[Examples](https://gelltorn.github.io/particles/examples/)
+
 ## Installation
 1. `npm i spark-particles`
 2. Done!
