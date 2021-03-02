@@ -1,7 +1,7 @@
 import Renderer from "./Renderer"
 import { ParticleManager } from "./Particle"
 import Vector2 from "./Vector2"
-import Rectangle from "./Rect"
+import Rectangle from "./Rectangle"
 import Line from "./Line"
 
 export default class Particles {
@@ -159,7 +159,6 @@ export default class Particles {
 			gradient.addColorStop(0, settings.renderer.linearGradient.color1);
 			gradient.addColorStop(1, settings.renderer.linearGradient.color2);
 			this._renderer.gradient = gradient;
-			console.log(1, gradient)
 		}
 
 		this.debug = settings.debug

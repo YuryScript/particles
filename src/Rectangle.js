@@ -72,4 +72,22 @@ export default class Rectangle {
 		this.position.set(x, y)
 		this.size.set(width, height)
 	}
+
+	contains(point) {
+		return (
+			point.x > this.left &&
+			point.x < this.right &&
+			point.y > this.top &&
+			point.y < this.bottom
+		)
+	}
+
+	intersectsCircle(circle) {
+		return !(
+			circle.position.x + circle.radius < this.left &&
+			circle.position.x + circle.radius > this.right &&
+			circle.position.y + circle.radius < this.top &&
+			circle.position.y + circle.radius > this.bottom
+		)
+	}
 }

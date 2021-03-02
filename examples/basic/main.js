@@ -3,9 +3,9 @@ import Particles from "../../src/Particles.js"
 const node = document.getElementById("particles")
 
 const particles = new Particles(node, {
-  debug: false, // boolean
+  debug: true, // boolean
   particles: {
-    amount: 250, // number
+    amount: 600, // number
     color: "#fff", // color
     createStrategy: "random", // 'random'
     distanceToLink: 150, // number
