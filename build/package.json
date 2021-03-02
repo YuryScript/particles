@@ -1,0 +1,39 @@
+{
+  "name": "spark-particles",
+  "version": "0.1.1",
+  "description": "Lightweight and fast Particle library written in JavaScript",
+  "main": "./build/src/Particles.js",
+  "scripts": {
+    "start": "snowpack dev",
+    "build": "snowpack build",
+    "release": "npm publish ./build",
+    "postbuild": "node ./scripts/postbuild.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GellTorn/particles.git"
+  },
+  "keywords": [
+    "canvas",
+    "particles",
+    "particle",
+    "spark-particles",
+    "particles.js",
+    "particlesjs",
+    "particles-js",
+    "jsparticles",
+    "html",
+    "html5",
+    "web",
+    "background"
+  ],
+  "author": "https://github.com/GellTorn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GellTorn/particles/issues"
+  },
+  "homepage": "https://github.com/GellTorn/particles#readme",
+  "devDependencies": {
+    "snowpack": "^3.0.13"
+  }
+}
