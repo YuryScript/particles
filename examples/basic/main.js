@@ -5,7 +5,7 @@ const node = document.getElementById("particles")
 const particles = new Particles(node, {
   debug: true, // boolean
   particles: {
-    amount: 600, // number
+    amount: 150, // number
     color: "#fff", // color
     createStrategy: "random", // 'random'
     distanceToLink: 150, // number
