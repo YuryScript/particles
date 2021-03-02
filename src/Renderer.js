@@ -86,24 +86,24 @@ export default class Renderer {
     this._ctx.strokeStyle = `#fff`
     this._ctx.beginPath()
     let offsetX = 0
-    const offsetY = 70
-    this._ctx.moveTo(offsetX, offsetY - this.deltas[0])
+    const startY = 70
+    this._ctx.moveTo(offsetX, startY - this.deltas[0])
     for(const delta of this.deltas) {
       // [0, 50]
-      const y = delta / max * 50
-      this._ctx.lineTo(offsetX, offsetY - y)
+      const offsetY = startY - (delta / max * 50)
+      this._ctx.lineTo(offsetX,  offsetY)
       offsetX++
     }
-    this._ctx.moveTo(0, offsetY)
-    this._ctx.lineTo(this.deltas.length, offsetY)
-    this._ctx.fillText('0', this.deltas.length, offsetY + 4)
-    this._ctx.moveTo(0, offsetY - 50)
-    this._ctx.lineTo(this.deltas.length, offsetY - 50)
-    this._ctx.fillText(max, this.deltas.length, offsetY - 50 + 4)
+    this._ctx.moveTo(0, startY)
+    this._ctx.lineTo(this.deltas.length, startY)
+    this._ctx.fillText('0', this.deltas.length, startY + 4)
+    this._ctx.moveTo(0, startY - 50)
+    this._ctx.lineTo(this.deltas.length, startY - 50)
+    this._ctx.fillText(max, this.deltas.length, startY - 50 + 4)
     this._ctx.stroke()
     this._ctx.fillStyle = `#fff`
 
     this._ctx.fillText(`${this.deltas[this.deltas.length - 1]?.toString()} ms (${min}-${max})`, 100, 10)
-    this._ctx.fillText(`${this.particles.length.toString()} par`, 0, 10)
+    this._ctx.fillText(`${this.particles.length.toString()} part`, 0, 10)
   }
 }
