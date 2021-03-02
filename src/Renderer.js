@@ -79,6 +79,9 @@ export default class Renderer {
   }
 
   drawPerformanceGraphic() {
+    const raw = this.deltas.filter((a) => Boolean(a))
+    const min = Math.min(...raw)
+    const max = Math.max(...raw)
     this._ctx.font = '16px monospace'
     this._ctx.strokeStyle = `#fff`
     this._ctx.beginPath()
@@ -86,23 +89,21 @@ export default class Renderer {
     const offsetY = 70
     this._ctx.moveTo(offsetX, offsetY - this.deltas[0])
     for(const delta of this.deltas) {
-      this._ctx.lineTo(offsetX, offsetY - delta)
+      // [0, 50]
+      const y = delta / max * 50
+      this._ctx.lineTo(offsetX, offsetY - y)
       offsetX++
     }
     this._ctx.moveTo(0, offsetY)
     this._ctx.lineTo(this.deltas.length, offsetY)
     this._ctx.fillText('0', this.deltas.length, offsetY + 4)
-    this._ctx.moveTo(0, offsetY - 16)
-    this._ctx.lineTo(this.deltas.length, offsetY - 16)
-    this._ctx.fillText('16', this.deltas.length, offsetY - 16 + 4)
-    this._ctx.moveTo(0, offsetY - 33)
-    this._ctx.lineTo(this.deltas.length, offsetY - 33)
-    this._ctx.fillText('33', this.deltas.length, offsetY - 33 + 4)
     this._ctx.moveTo(0, offsetY - 50)
     this._ctx.lineTo(this.deltas.length, offsetY - 50)
-    this._ctx.fillText('50', this.deltas.length, offsetY - 50 + 4)
+    this._ctx.fillText(max, this.deltas.length, offsetY - 50 + 4)
     this._ctx.stroke()
     this._ctx.fillStyle = `#fff`
-    this._ctx.fillText(`${this.deltas[this.deltas.length - 1]?.toString()} ms`, 0, 10)
+
+    this._ctx.fillText(`${this.deltas[this.deltas.length - 1]?.toString()} ms (${min}-${max})`, 100, 10)
+    this._ctx.fillText(`${this.particles.length.toString()} par`, 0, 10)
   }
 }
