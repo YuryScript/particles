@@ -75,10 +75,10 @@ export default class Rectangle {
 
 	contains(point) {
 		return (
-			point.x > this.left &&
-			point.x < this.right &&
-			point.y > this.top &&
-			point.y < this.bottom
+			point.x >= this.left &&
+			point.x <= this.right &&
+			point.y >= this.top &&
+			point.y <= this.bottom
 		)
 	}
 

@@ -3,6 +3,8 @@ import { ParticleManager } from "./Particle"
 import Vector2 from "./Vector2"
 import Rectangle from "./Rectangle"
 import Line from "./Line"
+import QuadTree from "./QuadTree"
+import Circle from "./Circle"
 
 export default class Particles {
 	constructor(canvas, settings) {
@@ -30,6 +32,10 @@ export default class Particles {
 
 		this._viewport = new Rectangle()
 
+		this._boundary
+
+		this._quadtree
+
 		this.processSettings(settings)
 
 		this.start()
@@ -53,7 +59,12 @@ export default class Particles {
 			particle.position.x += particle.velocity.x
 			particle.position.y += particle.velocity.y
 
-			this.checkBoundary(particle, this._viewport, this._distanceToLink)
+			this.checkBoundary(particle, this._boundary)
+		}
+
+		this._quadtree = new QuadTree(this._boundary, 4)
+		for(const particle of this._particleManager.particles) {
+			this._quadtree.insert(particle)
 		}
 
 		let lines
@@ -79,24 +90,39 @@ export default class Particles {
 			this._deltas.shift()
 		}
 		const a = this._deltas.filter((v) => v !== undefined)
-		// console.info(Math.min(...a), Math.max(...a))
 	}
 
 	linkPartiles(particles, distanceToLink) {
 		const lines = []
 
-		for (let a = 0; a < particles.length - 1; a++) {
-			for (let b = a + 1; b < particles.length; b++) {
-				const distance = particles[a].position.distance(particles[b].position)
-				if (distance < distanceToLink) {
-					const line = new Line(
-						Vector2.fromVector(particles[a].position),
-						Vector2.fromVector(particles[b].position)
-					)
-					const alpha = 1 - distance / distanceToLink
-					line.alpha = alpha
-					lines.push(line)
-				}
+		// for (let a = 0; a < particles.length - 1; a++) {
+		// 	for (let b = a + 1; b < particles.length; b++) {
+		// 		const distance = particles[a].position.distance(particles[b].position)
+		// 		if (distance < distanceToLink) {
+		// 			const line = new Line(
+		// 				Vector2.fromVector(particles[a].position),
+		// 				Vector2.fromVector(particles[b].position)
+		// 			)
+		// 			const alpha = 1 - distance / distanceToLink
+		// 			line.alpha = alpha
+		// 			lines.push(line)
+		// 		}
+		// 	}
+		// }
+
+		for(const particleA of particles) {
+			const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
+			const inBoundParticles = this._quadtree.queryCircle(boundCircle)
+
+			for(const particleB of inBoundParticles) {
+				const distance = particleA.position.distance(particleB.position)
+				const line = new Line(
+					Vector2.fromVector(particleA.position),
+					Vector2.fromVector(particleB.position)
+				)
+				const alpha = 1 - distance / distanceToLink
+				line.alpha = alpha
+				lines.push(line)
 			}
 		}
 
@@ -109,6 +135,13 @@ export default class Particles {
 
 		this._renderer.viewportSize = new Vector2(width, height)
 		this._viewport.set(0, 0, width, height)
+		this._boundary = new Rectangle(
+			-this._distanceToLink,
+			-this._distanceToLink,
+			width + this._distanceToLink * 2,
+			height + this._distanceToLink * 2
+		)
+		this._quadtree = new QuadTree(this._boundary, 4)
 	}
 
 	get debug() {
@@ -165,21 +198,21 @@ export default class Particles {
 			
 	}
 
-	checkBoundary(particle, boundary, offset) {
-		if (particle.position.x < boundary.left - offset) {
-			particle.position.x = boundary.right + offset
+	checkBoundary(particle, boundary) {
+		if (particle.position.x < boundary.left ) {
+			particle.position.x = boundary.right
 		}
 
-		if (particle.position.x > boundary.right + offset) {
-			particle.position.x = boundary.left - offset
+		if (particle.position.x > boundary.right) {
+			particle.position.x = boundary.left
 		}
 
-		if (particle.position.y < boundary.top - offset) {
-			particle.position.y = boundary.bottom + offset
+		if (particle.position.y < boundary.top) {
+			particle.position.y = boundary.bottom
 		}
 
-		if (particle.position.y > boundary.bottom + offset) {
-			particle.position.y = boundary.top - offset
+		if (particle.position.y > boundary.bottom) {
+			particle.position.y = boundary.top
 		}
 	}
 }

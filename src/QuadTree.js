@@ -51,10 +51,10 @@ export default class QuadTree {
     }
 
     return (
-      (this.northEast?.insert(point) ||
-        this.northWest?.insert(point) ||
-        this.southEast?.insert(point) ||
-        this.southWest?.insert(point)) ??
+      (this.northEast.insert(point) ||
+        this.northWest.insert(point) ||
+        this.southEast.insert(point) ||
+        this.southWest.insert(point)) ??
       false
     )
   }
@@ -70,14 +70,14 @@ export default class QuadTree {
           continue
         }
 
-        res.push(p.particle)
+        res.push(p)
       }
 
       if (this.divided) {
-        this.northEast?.query(circle, res)
-        this.northWest?.query(circle, res)
-        this.southEast?.query(circle, res)
-        this.southWest?.query(circle, res)
+        this.northEast?.queryCircle(circle, res)
+        this.northWest?.queryCircle(circle, res)
+        this.southEast?.queryCircle(circle, res)
+        this.southWest?.queryCircle(circle, res)
       }
     }
 
