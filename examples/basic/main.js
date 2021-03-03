@@ -4,6 +4,7 @@ const node = document.getElementById("particles")
 
 const particles = new Particles(node, {
   debug: true, // boolean
+  resize: true,
   particles: {
     amount: 600, // number
     color: "#fff", // color

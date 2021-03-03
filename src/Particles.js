@@ -36,10 +36,23 @@ export default class Particles {
 
 		this._quadtree
 
+		this._resizeTimeout
+
 		this.processSettings(settings)
+
+		if (this._resize) {
+			window.addEventListener('resize', this.onResize.bind(this))
+		}
 
 		this.start()
 		console.log("Particles started!")
+	}
+
+	onResize(e) {
+		if (this._resizeTimeout) {
+			clearTimeout(this._resizeTimeout)
+		}
+		this._resizeTimeout = setTimeout(() => this.setSize(window.innerWidth, window.innerHeight), 100)
 	}
 
 	start() {
@@ -155,6 +168,8 @@ export default class Particles {
 	}
 
 	processSettings(settings) {
+		this._resize = settings.resize
+
 		this._linkedParticles = settings.particles.linkedParticles
 
 		this._distanceToLink = settings.particles.distanceToLink
