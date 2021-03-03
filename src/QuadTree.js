@@ -60,6 +60,7 @@ export default class QuadTree {
   }
 
   queryCircle(circle, found) {
+    // TODO non reqursive style
     const res = found ?? []
 
     if (!this.rectangle.intersectsCircle(circle)) {

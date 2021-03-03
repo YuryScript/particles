@@ -84,10 +84,10 @@ export default class Rectangle {
 
 	intersectsCircle(circle) {
 		return !(
-			circle.position.x + circle.radius < this.left &&
-			circle.position.x + circle.radius > this.right &&
-			circle.position.y + circle.radius < this.top &&
-			circle.position.y + circle.radius > this.bottom
+			circle.position.x + circle.radius <= this.left &&
+			circle.position.x + circle.radius >= this.right &&
+			circle.position.y + circle.radius <= this.top &&
+			circle.position.y + circle.radius >= this.bottom
 		)
 	}
 }

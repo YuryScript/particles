@@ -92,40 +92,40 @@ export default class Particles {
 	linkPartiles(particles, distanceToLink) {
 		const lines = []
 
-		for (let a = 0; a < particles.length - 1; a++) {
-			for (let b = a + 1; b < particles.length; b++) {
-				const distance = particles[a].position.distance(particles[b].position)
-				if (distance < distanceToLink) {
-					const line = new Line(
-						Vector2.fromVector(particles[a].position),
-						Vector2.fromVector(particles[b].position)
-					)
-					const alpha = 1 - distance / distanceToLink
-					line.alpha = alpha
-					lines.push(line)
-				}
-			}
-		}
-
-		// for(const particleA of particles) {
-		// 	const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
-		// 	const inBoundParticles = this._quadtree.queryCircle(boundCircle)
-
-		// 	for(const particleB of inBoundParticles) {
-		// 		if(particleA === particleB) {
-		// 			continue
+		// for (let a = 0; a < particles.length - 1; a++) {
+		// 	for (let b = a + 1; b < particles.length; b++) {
+		// 		const distance = particles[a].position.distance(particles[b].position)
+		// 		if (distance < distanceToLink) {
+		// 			const line = new Line(
+		// 				Vector2.fromVector(particles[a].position),
+		// 				Vector2.fromVector(particles[b].position)
+		// 			)
+		// 			const alpha = 1 - distance / distanceToLink
+		// 			line.alpha = alpha
+		// 			lines.push(line)
 		// 		}
-
-		// 		const distance = particleA.position.distance(particleB.position)
-		// 		const line = new Line(
-		// 			Vector2.fromVector(particleA.position),
-		// 			Vector2.fromVector(particleB.position)
-		// 		)
-		// 		const alpha = 1 - distance / distanceToLink
-		// 		line.alpha = alpha
-		// 		lines.push(line)
 		// 	}
 		// }
+
+		for(const particleA of particles) {
+			const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
+			const inBoundParticles = this._quadtree.queryCircle(boundCircle)
+
+			for(const particleB of inBoundParticles) {
+				if(particleA === particleB) {
+					continue
+				}
+
+				const distance = particleA.position.distance(particleB.position)
+				const line = new Line(
+					Vector2.fromVector(particleA.position),
+					Vector2.fromVector(particleB.position)
+				)
+				const alpha = 1 - distance / distanceToLink
+				line.alpha = alpha.toFixed(1)
+				lines.push(line)
+			}
+		}
 
 		return lines
 	}

@@ -58,6 +58,8 @@ export default class Renderer {
     }
     this._ctx.fill()
 
+    // TODO
+    // const optimized = this.line()
     for (const line of this.lines) {
       this._ctx.beginPath()
       this._ctx.strokeStyle = `rgba(255,255,255,${line.alpha})`
@@ -100,9 +102,10 @@ export default class Renderer {
     this._ctx.moveTo(0, startY - 50)
     this._ctx.lineTo(this.deltas.length, startY - 50)
     this._ctx.fillText(max, this.deltas.length, startY - 50 + 4)
+    this._ctx.closePath()
     this._ctx.stroke()
-    this._ctx.fillStyle = `#fff`
 
+    this._ctx.fillStyle = `#fff`
     this._ctx.fillText(`${this.deltas[this.deltas.length - 1]?.toString()} ms (${min}-${max})`, 100, 10)
     this._ctx.fillText(`${this.particles.length.toString()} part`, 0, 10)
   }

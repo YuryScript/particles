@@ -8,6 +8,6 @@ export default class Circle {
   }
 
   intersectsPoint(point) {
-    return point.distance(this.position) <= this.radius
+    return (point.distance(this.position) <= this.radius)
   }
 }
