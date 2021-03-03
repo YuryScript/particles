@@ -1,5 +1,3 @@
-/** Original https://github.com/matteobruni/tsparticles/blob/b6c06ee17d4a0bba9bb1266a2c1a0ed60a0fafc5/core/main/src/Utils/QuadTree.ts */
-import Vector2 from "./Vector2"
 import Rectangle from "./Rectangle"
 
 export default class QuadTree {
@@ -17,7 +15,7 @@ export default class QuadTree {
     this.northWest
 
     this.southEast
-    
+
     this.southWest
   }
 
@@ -59,26 +57,28 @@ export default class QuadTree {
     )
   }
 
-  queryCircle(circle, found) {
-    // TODO non reqursive style
-    const res = found ?? []
+  queryCircle(circle) {
+    const res = []
+    const unseenQuadTree = []
 
-    if (!this.rectangle.intersectsCircle(circle)) {
-      return []
-    } else {
-      for (const p of this.points) {
-        if (!circle.intersectsPoint(p.position)) {
-          continue
+    unseenQuadTree.push(this)
+
+    for (let i = 0; i < unseenQuadTree.length; i++) {
+      const quadTree = unseenQuadTree[i]
+
+      if (quadTree.rectangle.intersectsCircle(circle)) {
+        for (const p of quadTree.points) {
+          if (circle.intersectsPoint(p.position)) {
+            res.push(p)
+          }
         }
 
-        res.push(p)
-      }
-
-      if (this.divided) {
-        this.northEast?.queryCircle(circle, res)
-        this.northWest?.queryCircle(circle, res)
-        this.southEast?.queryCircle(circle, res)
-        this.southWest?.queryCircle(circle, res)
+        if (quadTree.divided) {
+          unseenQuadTree.push(quadTree.northEast)
+          unseenQuadTree.push(quadTree.northWest)
+          unseenQuadTree.push(quadTree.southEast)
+          unseenQuadTree.push(quadTree.southWest)
+        }
       }
     }
 

@@ -32,7 +32,7 @@ export default class Renderer {
   render() {
     if (this._transparentBackground) {
       this._ctx.clearRect()
-    } else if(this.gradient) {
+    } else if (this.gradient) {
       this._ctx.fillStyle = this.gradient
       this._ctx.fillRect(0, 0, this._viewportSize.x, this._viewportSize.y)
     } else {
@@ -67,8 +67,8 @@ export default class Renderer {
       this._ctx.lineTo(line.b.x, line.b.y)
       this._ctx.stroke()
     }
-    
-    if(this._debug) {
+
+    if (this._debug) {
       this.drawPerformanceGraphic()
     }
   }
@@ -90,10 +90,10 @@ export default class Renderer {
     let offsetX = 0
     const startY = 70
     this._ctx.moveTo(offsetX, startY - this.deltas[0])
-    for(const delta of this.deltas) {
+    for (const delta of this.deltas) {
       // [0, 50]
       const offsetY = startY - (delta / max * 50)
-      this._ctx.lineTo(offsetX,  offsetY)
+      this._ctx.lineTo(offsetX, offsetY)
       offsetX++
     }
     this._ctx.moveTo(0, startY)
@@ -106,7 +106,7 @@ export default class Renderer {
     this._ctx.stroke()
 
     this._ctx.fillStyle = `#fff`
-    this._ctx.fillText(`${this.deltas[this.deltas.length - 1]?.toString()} ms (${min}-${max})`, 100, 10)
-    this._ctx.fillText(`${this.particles.length.toString()} part`, 0, 10)
+    this._ctx.fillText(`${this.deltas[this.deltas.length - 1]?.toString()} ms (${min}-${max})`, 100, 15)
+    this._ctx.fillText(`${this.particles.length.toString()} part`, 0, 15)
   }
 }

@@ -83,7 +83,7 @@ export default class Particles {
 		const endTime = Date.now()
 		const delta = endTime - startTime
 		this._deltas.push(delta)
-		if(this._deltas.length > this._deltas.length - 1) {
+		if (this._deltas.length > this._deltas.length - 1) {
 			this._deltas.shift()
 		}
 		const a = this._deltas.filter((v) => v !== undefined)
@@ -92,40 +92,40 @@ export default class Particles {
 	linkPartiles(particles, distanceToLink) {
 		const lines = []
 
-		// for (let a = 0; a < particles.length - 1; a++) {
-		// 	for (let b = a + 1; b < particles.length; b++) {
-		// 		const distance = particles[a].position.distance(particles[b].position)
-		// 		if (distance < distanceToLink) {
-		// 			const line = new Line(
-		// 				Vector2.fromVector(particles[a].position),
-		// 				Vector2.fromVector(particles[b].position)
-		// 			)
-		// 			const alpha = 1 - distance / distanceToLink
-		// 			line.alpha = alpha
-		// 			lines.push(line)
-		// 		}
-		// 	}
-		// }
-
-		for(const particleA of particles) {
-			const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
-			const inBoundParticles = this._quadtree.queryCircle(boundCircle)
-
-			for(const particleB of inBoundParticles) {
-				if(particleA === particleB) {
-					continue
+		for (let a = 0; a < particles.length - 1; a++) {
+			for (let b = a + 1; b < particles.length; b++) {
+				const distance = particles[a].position.distance(particles[b].position)
+				if (distance < distanceToLink) {
+					const line = new Line(
+						Vector2.fromVector(particles[a].position),
+						Vector2.fromVector(particles[b].position)
+					)
+					const alpha = 1 - distance / distanceToLink
+					line.alpha = alpha
+					lines.push(line)
 				}
-
-				const distance = particleA.position.distance(particleB.position)
-				const line = new Line(
-					Vector2.fromVector(particleA.position),
-					Vector2.fromVector(particleB.position)
-				)
-				const alpha = 1 - distance / distanceToLink
-				line.alpha = alpha.toFixed(1)
-				lines.push(line)
 			}
 		}
+
+		// for (const particleA of particles) {
+		// 	const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
+		// 	const inBoundParticles = this._quadtree.queryCircle(boundCircle)
+
+		// 	for (const particleB of inBoundParticles) {
+		// 		if (particleA === particleB) {
+		// 			continue
+		// 		}
+
+		// 		const distance = particleA.position.distance(particleB.position)
+		// 		const line = new Line(
+		// 			Vector2.fromVector(particleA.position),
+		// 			Vector2.fromVector(particleB.position)
+		// 		)
+		// 		const alpha = 1 - distance / distanceToLink
+		// 		line.alpha = alpha
+		// 		lines.push(line)
+		// 	}
+		// }
 
 		return lines
 	}
@@ -170,8 +170,8 @@ export default class Particles {
 			settings.particles.maxRadius,
 		)
 
-		if(settings.staticParticles) {
-			for(const coords of settings.staticParticles) {
+		if (settings.staticParticles) {
+			for (const coords of settings.staticParticles) {
 				const p = this._particleManager.createParticle()
 				p.active = false
 				p.radius = 0
@@ -183,7 +183,7 @@ export default class Particles {
 
 		this.setSize(settings.renderer.width, settings.renderer.height)
 
-		if(settings.renderer.linearGradient) {
+		if (settings.renderer.linearGradient) {
 			const gradient = this.ctx.createLinearGradient(
 				settings.renderer.width * settings.renderer.linearGradient.x1,
 				settings.renderer.height * settings.renderer.linearGradient.y1,
@@ -196,11 +196,11 @@ export default class Particles {
 		}
 
 		this.debug = settings.debug
-			
+
 	}
 
 	checkBoundary(particle, boundary) {
-		if (particle.position.x < boundary.left ) {
+		if (particle.position.x < boundary.left) {
 			particle.position.x = boundary.right
 		}
 
