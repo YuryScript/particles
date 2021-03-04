@@ -30,4 +30,13 @@ module.exports = {
   buildOptions: {
     /* ... */
   },
+  optimize: {
+    bundle: true,
+    minify: true,
+    target: 'es2018',
+    manifest: false,
+    entrypoints: ['./src/Particles.js'],
+    splitting: true,
+    treeshake: true,
+  },
 }

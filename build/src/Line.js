@@ -1,1 +1,0 @@
-import t from"./Vector2.js";export default class i{constructor(s=new t,h=new t){this.a=s,this.b=h}length(){return Math.sqrt((this.b.x-this.a.x)*(this.b.x-this.a.x)+(this.b.y-this.a.y)*(this.b.y-this.a.y))}}

@@ -1,1 +1,0 @@
-export default class e{static intBetween(t,r){return r||(r=t,t=0),Math.floor(Math.random()*(r-t)+t)}static floatBetween(t,r){return r||(r=t,t=0),Math.random()*(r-t)+t}static fromArray(t){return t[Math.floor(Math.random()*t.length)]}static indexFromArray(t){return Math.floor(Math.random()*t.length)}}

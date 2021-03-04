@@ -9,15 +9,7 @@
       ],
       "js": [
         "/basic/main.js",
-        "/src/Circle.js",
-        "/src/Line.js",
-        "/src/Particle.js",
-        "/src/Particles.js",
-        "/src/QuadTree.js",
-        "/src/Random.js",
-        "/src/Rectangle.js",
-        "/src/Renderer.js",
-        "/src/Vector2.js"
+        "/src/Particles.js"
       ]
     },
     "/index.html": {
