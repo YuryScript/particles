@@ -1,8 +1,10 @@
 import Renderer from "./Renderer.js"
 import { ParticleManager } from "./Particle.js"
 import Vector2 from "./Vector2.js"
-import Rectangle from "./Rect.js"
+import Rectangle from "./Rectangle.js"
 import Line from "./Line.js"
+import QuadTree from "./QuadTree.js"
+import Circle from "./Circle.js"
 
 export default class Particles {
 	constructor(canvas, settings) {
@@ -30,10 +32,27 @@ export default class Particles {
 
 		this._viewport = new Rectangle()
 
+		this._boundary
+
+		this._quadtree
+
+		this._resizeTimeout
+
 		this.processSettings(settings)
+
+		if (this._resize) {
+			window.addEventListener('resize', this.onResize.bind(this))
+		}
 
 		this.start()
 		console.log("Particles started!")
+	}
+
+	onResize(e) {
+		if (this._resizeTimeout) {
+			clearTimeout(this._resizeTimeout)
+		}
+		this._resizeTimeout = setTimeout(() => this.setSize(window.innerWidth, window.innerHeight), 100)
 	}
 
 	start() {
@@ -48,12 +67,14 @@ export default class Particles {
 	update() {
 		const startTime = Date.now()
 
+		this._quadtree = new QuadTree(this._boundary, 4)
 		const activeParticles = this._particleManager.particles.filter((p) => p.active)
 		for (const particle of activeParticles) {
 			particle.position.x += particle.velocity.x
 			particle.position.y += particle.velocity.y
 
-			this.checkBoundary(particle, this._viewport, this._distanceToLink)
+			this.checkBoundary(particle, this._boundary)
+			this._quadtree.insert(particle)
 		}
 
 		let lines
@@ -75,11 +96,10 @@ export default class Particles {
 		const endTime = Date.now()
 		const delta = endTime - startTime
 		this._deltas.push(delta)
-		if(this._deltas.length > this._deltas.length - 1) {
+		if (this._deltas.length > this._deltas.length - 1) {
 			this._deltas.shift()
 		}
 		const a = this._deltas.filter((v) => v !== undefined)
-		// console.info(Math.min(...a), Math.max(...a))
 	}
 
 	linkPartiles(particles, distanceToLink) {
@@ -100,6 +120,26 @@ export default class Particles {
 			}
 		}
 
+		// for (const particleA of particles) {
+		// 	const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
+		// 	const inBoundParticles = this._quadtree.queryCircle(boundCircle)
+
+		// 	for (const particleB of inBoundParticles) {
+		// 		if (particleA === particleB) {
+		// 			continue
+		// 		}
+
+		// 		const distance = particleA.position.distance(particleB.position)
+		// 		const line = new Line(
+		// 			Vector2.fromVector(particleA.position),
+		// 			Vector2.fromVector(particleB.position)
+		// 		)
+		// 		const alpha = 1 - distance / distanceToLink
+		// 		line.alpha = alpha
+		// 		lines.push(line)
+		// 	}
+		// }
+
 		return lines
 	}
 
@@ -109,6 +149,13 @@ export default class Particles {
 
 		this._renderer.viewportSize = new Vector2(width, height)
 		this._viewport.set(0, 0, width, height)
+		this._boundary = new Rectangle(
+			-this._distanceToLink,
+			-this._distanceToLink,
+			width + this._distanceToLink * 2,
+			height + this._distanceToLink * 2
+		)
+		this._quadtree = new QuadTree(this._boundary, 4)
 	}
 
 	get debug() {
@@ -121,6 +168,8 @@ export default class Particles {
 	}
 
 	processSettings(settings) {
+		this._resize = settings.resize
+
 		this._linkedParticles = settings.particles.linkedParticles
 
 		this._distanceToLink = settings.particles.distanceToLink
@@ -136,8 +185,8 @@ export default class Particles {
 			settings.particles.maxRadius,
 		)
 
-		if(settings.staticParticles) {
-			for(const coords of settings.staticParticles) {
+		if (settings.staticParticles) {
+			for (const coords of settings.staticParticles) {
 				const p = this._particleManager.createParticle()
 				p.active = false
 				p.radius = 0
@@ -149,7 +198,7 @@ export default class Particles {
 
 		this.setSize(settings.renderer.width, settings.renderer.height)
 
-		if(settings.renderer.linearGradient) {
+		if (settings.renderer.linearGradient) {
 			const gradient = this.ctx.createLinearGradient(
 				settings.renderer.width * settings.renderer.linearGradient.x1,
 				settings.renderer.height * settings.renderer.linearGradient.y1,
@@ -159,28 +208,27 @@ export default class Particles {
 			gradient.addColorStop(0, settings.renderer.linearGradient.color1);
 			gradient.addColorStop(1, settings.renderer.linearGradient.color2);
 			this._renderer.gradient = gradient;
-			console.log(1, gradient)
 		}
 
 		this.debug = settings.debug
-			
+
 	}
 
-	checkBoundary(particle, boundary, offset) {
-		if (particle.position.x < boundary.left - offset) {
-			particle.position.x = boundary.right + offset
+	checkBoundary(particle, boundary) {
+		if (particle.position.x < boundary.left) {
+			particle.position.x = boundary.right
 		}
 
-		if (particle.position.x > boundary.right + offset) {
-			particle.position.x = boundary.left - offset
+		if (particle.position.x > boundary.right) {
+			particle.position.x = boundary.left
 		}
 
-		if (particle.position.y < boundary.top - offset) {
-			particle.position.y = boundary.bottom + offset
+		if (particle.position.y < boundary.top) {
+			particle.position.y = boundary.bottom
 		}
 
-		if (particle.position.y > boundary.bottom + offset) {
-			particle.position.y = boundary.top - offset
+		if (particle.position.y > boundary.bottom) {
+			particle.position.y = boundary.top
 		}
 	}
 }

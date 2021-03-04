@@ -6,7 +6,7 @@ const particles = new Particles(node, {
   debug: true, // boolean
   resize: true,
   particles: {
-    amount: 600, // number
+    amount: 250, // number
     color: "#fff", // color
     createStrategy: "random", // 'random'
     distanceToLink: 150, // number

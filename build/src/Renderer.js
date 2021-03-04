@@ -32,7 +32,7 @@ export default class Renderer {
   render() {
     if (this._transparentBackground) {
       this._ctx.clearRect()
-    } else if(this.gradient) {
+    } else if (this.gradient) {
       this._ctx.fillStyle = this.gradient
       this._ctx.fillRect(0, 0, this._viewportSize.x, this._viewportSize.y)
     } else {
@@ -58,6 +58,8 @@ export default class Renderer {
     }
     this._ctx.fill()
 
+    // TODO
+    // const optimized = this.line()
     for (const line of this.lines) {
       this._ctx.beginPath()
       this._ctx.strokeStyle = `rgba(255,255,255,${line.alpha})`
@@ -65,8 +67,8 @@ export default class Renderer {
       this._ctx.lineTo(line.b.x, line.b.y)
       this._ctx.stroke()
     }
-    
-    if(this._debug) {
+
+    if (this._debug) {
       this.drawPerformanceGraphic()
     }
   }
@@ -79,30 +81,32 @@ export default class Renderer {
   }
 
   drawPerformanceGraphic() {
+    const raw = this.deltas.filter((a) => Boolean(a))
+    const min = Math.min(...raw)
+    const max = Math.max(...raw)
     this._ctx.font = '16px monospace'
     this._ctx.strokeStyle = `#fff`
     this._ctx.beginPath()
     let offsetX = 0
-    const offsetY = 70
-    this._ctx.moveTo(offsetX, offsetY - this.deltas[0])
-    for(const delta of this.deltas) {
-      this._ctx.lineTo(offsetX, offsetY - delta)
+    const startY = 70
+    this._ctx.moveTo(offsetX, startY - this.deltas[0])
+    for (const delta of this.deltas) {
+      // [0, 50]
+      const offsetY = startY - (delta / max * 50)
+      this._ctx.lineTo(offsetX, offsetY)
       offsetX++
     }
-    this._ctx.moveTo(0, offsetY)
-    this._ctx.lineTo(this.deltas.length, offsetY)
-    this._ctx.fillText('0', this.deltas.length, offsetY + 4)
-    this._ctx.moveTo(0, offsetY - 16)
-    this._ctx.lineTo(this.deltas.length, offsetY - 16)
-    this._ctx.fillText('16', this.deltas.length, offsetY - 16 + 4)
-    this._ctx.moveTo(0, offsetY - 33)
-    this._ctx.lineTo(this.deltas.length, offsetY - 33)
-    this._ctx.fillText('33', this.deltas.length, offsetY - 33 + 4)
-    this._ctx.moveTo(0, offsetY - 50)
-    this._ctx.lineTo(this.deltas.length, offsetY - 50)
-    this._ctx.fillText('50', this.deltas.length, offsetY - 50 + 4)
+    this._ctx.moveTo(0, startY)
+    this._ctx.lineTo(this.deltas.length, startY)
+    this._ctx.fillText('0', this.deltas.length, startY + 4)
+    this._ctx.moveTo(0, startY - 50)
+    this._ctx.lineTo(this.deltas.length, startY - 50)
+    this._ctx.fillText(max, this.deltas.length, startY - 50 + 4)
+    this._ctx.closePath()
     this._ctx.stroke()
+
     this._ctx.fillStyle = `#fff`
-    this._ctx.fillText(`${this.deltas[this.deltas.length - 1]?.toString()} ms`, 0, 10)
+    this._ctx.fillText(`${this.deltas[this.deltas.length - 1]?.toString()} ms (${min}-${max})`, 100, 15)
+    this._ctx.fillText(`${this.particles.length.toString()} part`, 0, 15)
   }
 }

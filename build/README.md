@@ -3,6 +3,7 @@
 ![license](https://img.shields.io/npm/l/spark-particles)
 ![language](https://img.shields.io/github/languages/top/gelltorn/particles)
 ![issues](https://img.shields.io/github/issues/gelltorn/particles)
+![npm downloads](https://img.shields.io/npm/dt/spark-particles)
 
 Lightweight and fast Particle library written in JavaScript
 
