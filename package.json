@@ -1,12 +1,12 @@
 {
   "name": "spark-particles",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Lightweight and fast Particle library written in JavaScript",
-  "main": "./src/Particles.js",
+  "main": "./Particles.js",
   "scripts": {
     "start": "snowpack dev",
     "build": "snowpack build",
-    "release": "npm publish ./build",
+    "release": "npm publish ./build/src",
     "postbuild": "node ./scripts/postbuild.js"
   },
   "repository": {

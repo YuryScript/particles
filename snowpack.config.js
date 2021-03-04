@@ -17,9 +17,6 @@ module.exports = {
         preloadModules: true,
       }
     ],
-    // [
-    //   '@snowpack/plugin-webpack'
-    // ],
   ],
   packageOptions: {
     /* ... */

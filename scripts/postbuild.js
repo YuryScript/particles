@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const BUILD_LIB_PATH = 'build/';
+const BUILD_LIB_PATH = 'build/src/';
 const README_PATH = 'README.md';
 const PACKAGE_PATH = 'package.json';
 
