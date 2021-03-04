@@ -14,12 +14,7 @@ const particles = new Particles(node, {
     maxVelocity: 0.8, // number
     maxRadius: 4 // number
   },
-  staticParticles: [
-    [0.4, 0.4],
-    [0.6, 0.4],
-    [0.4, 0.6],
-    [0.6, 0.6],
-  ],
+  staticParticles: [],
   renderer: {
     transparentBackground: false, // boolean
     backgroundColor: "#186cb6", // color

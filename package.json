@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/GellTorn/particles#readme",
   "devDependencies": {
+    "@snowpack/plugin-optimize": "^0.2.13",
     "snowpack": "^3.0.13"
   }
 }

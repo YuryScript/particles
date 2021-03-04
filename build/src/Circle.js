@@ -1,13 +1,1 @@
-import Vector2 from "./Vector2.js";
-
-export default class Circle {
-  constructor(x = 0, y = 0, radius = 0) {
-    this.position = new Vector2(x, y)
-
-    this.radius = radius
-  }
-
-  intersectsPoint(point) {
-    return (point.distance(this.position) <= this.radius)
-  }
-}
+import r from"./Vector2.js";export default class o{constructor(t=0,i=0,s=0){this.position=new r(t,i),this.radius=s}intersectsPoint(t){return t.distance(this.position)<=this.radius}}

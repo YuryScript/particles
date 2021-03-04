@@ -1,0 +1,30 @@
+{
+  "imports": {
+    "/basic/index.html": {
+      "entry": [
+        "/basic/main.js"
+      ],
+      "css": [
+        "/basic/style.css"
+      ],
+      "js": [
+        "/basic/main.js",
+        "/src/Circle.js",
+        "/src/Line.js",
+        "/src/Particle.js",
+        "/src/Particles.js",
+        "/src/QuadTree.js",
+        "/src/Random.js",
+        "/src/Rectangle.js",
+        "/src/Renderer.js",
+        "/src/Vector2.js"
+      ]
+    },
+    "/index.html": {
+      "entry": [],
+      "css": [],
+      "js": []
+    }
+  },
+  "generated": {}
+}
