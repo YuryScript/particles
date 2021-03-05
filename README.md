@@ -1,16 +1,20 @@
 # Spark Particles
-![version](https://img.shields.io/npm/v/spark-particles)
-![license](https://img.shields.io/npm/l/spark-particles)
-![language](https://img.shields.io/github/languages/top/gelltorn/particles)
-![issues](https://img.shields.io/github/issues/gelltorn/particles)
-![npm downloads](https://img.shields.io/npm/dt/spark-particles)
+![version](https://img.shields.io/npm/v/spark-particles?style=for-the-badge)
+![license](https://img.shields.io/npm/l/spark-particles?style=for-the-badge)
+![language](https://img.shields.io/github/languages/top/gelltorn/particles?style=for-the-badge)
+![issues](https://img.shields.io/github/issues/gelltorn/particles?style=for-the-badge)
+![npm downloads](https://img.shields.io/npm/dt/spark-particles?style=for-the-badge)
+![npm min bundle size](https://img.shields.io/bundlephobia/min/spark-particles?style=for-the-badge)
+![npm minzip bundle size](https://img.shields.io/bundlephobia/minzip/spark-particles?style=for-the-badge)
 
 Lightweight and fast Particle library written in JavaScript
+
+Zero Dependencies!
 
 [Examples](https://gelltorn.github.io/particles/examples/)
 
 ## Installation
-1. `npm i spark-particles`
+1. `npm i spark-particles --save`
 2. Done!
 ## Usage
 See Basic example
@@ -31,12 +35,6 @@ const particles = new Particles(node, {
     maxVelocity: 0.8, // number
     maxRadius: 4 // number
   },
-  staticParticles: [
-    [0.4, 0.4],
-    [0.6, 0.4],
-    [0.4, 0.6],
-    [0.6, 0.6],
-  ],
   renderer: {
     transparentBackground: false, // boolean
     backgroundColor: "#186cb6", // color

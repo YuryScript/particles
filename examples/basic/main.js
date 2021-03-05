@@ -1,4 +1,4 @@
-import Particles from "../../src/Particles.js"
+import Particles from "./Particles.js"
 
 const node = document.getElementById("particles")
 
@@ -14,7 +14,6 @@ const particles = new Particles(node, {
     maxVelocity: 0.8, // number
     maxRadius: 4 // number
   },
-  staticParticles: [],
   renderer: {
     transparentBackground: false, // boolean
     backgroundColor: "#186cb6", // color
