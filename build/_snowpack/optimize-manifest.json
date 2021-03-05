@@ -9,7 +9,7 @@
       ],
       "js": [
         "/basic/main.js",
-        "/src/Particles.js"
+        "/basic/Particles.js"
       ]
     },
     "/index.html": {
