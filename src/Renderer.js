@@ -77,18 +77,7 @@ export default class Renderer {
   }
 
   drawPerformanceGraphic() {
-    function normalize(val, min, max){
-      // Shift to positive to avoid issues when crossing the 0 line
-      if(min < 0){
-        max += 0 - min;
-        val += 0 - min;
-        min = 0;
-      }
-      // Shift values from 0 - max
-      val = val - min;
-      max = max - min;
-      return Math.max(0, Math.min(1, val / max));
-    }
+    const normalize = (val, min, max) => (val - min) / (max - min)
 
     const raw = this.deltas.filter((a) => Boolean(a))
     const min = Math.min(...raw)
@@ -96,6 +85,7 @@ export default class Renderer {
 
     this._ctx.font = '16px monospace'
     this._ctx.strokeStyle = `#fff`
+    this._ctx.fillStyle = `#fff`
 
     let offsetX = 0
     const startY = 70
@@ -119,7 +109,6 @@ export default class Renderer {
     this._ctx.closePath()
     this._ctx.stroke()
 
-    this._ctx.fillStyle = `#fff`
     this._ctx.fillText(`${this.particles.length.toString()} particles`, 0, 15)
     this._ctx.fillText(`${this.deltas[this.deltas.length - 1]?.toString()} ms`, 130, 15)
   }

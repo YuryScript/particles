@@ -5,6 +5,7 @@ import Rectangle from "./Rectangle"
 import Line from "./Line"
 import QuadTree from "./QuadTree"
 import Circle from "./Circle"
+import Random from "./Random"
 
 export default class Particles {
 	constructor(canvas) {
@@ -38,15 +39,108 @@ export default class Particles {
 
 		this._particleManager = new ParticleManager()
 
-		this._particleManager.generateParticlesRandomly(
-			settings.particles.amount,
-			settings.renderer.width,
-			settings.renderer.height,
-			settings.particles.distanceToLink,
-			settings.particles.maxVelocity,
-			settings.particles.maxVelocity,
-			settings.particles.maxRadius,
-		)
+		for (let a = 0; a < settings.particles.amount; a++) {
+      const particle = this._particleManager.createParticle()
+
+			const position = new Vector2()
+			switch(settings.particles.createStrategy) {
+				case 'even':
+					const widthToHeight = settings.renderer.width / settings.renderer.height
+					const heightToWidth = settings.renderer.height / settings.renderer.width
+					const sum = widthToHeight + heightToWidth
+					const pInRow = Math.round(settings.particles.amount / sum * widthToHeight)
+					const pInColumn = Math.round(settings.particles.amount / sum * heightToWidth)
+					console.log(widthToHeight, heightToWidth, pInRow, pInColumn, pInRow + pInColumn)
+					const width = Math.round(settings.renderer.width / pInRow)
+					const height = Math.round(settings.renderer.height / pInColumn)
+					// position.set(a % 2 width / , 0)
+					break
+				default:
+				case 'random':
+					position.set(
+						Random.intBetween(
+							-settings.particles.distanceToLink,
+							settings.renderer.width + settings.particles.distanceToLink
+						), 
+						Random.intBetween(
+							-settings.particles.distanceToLink,
+							settings.renderer.height + settings.particles.distanceToLink
+						)
+					)
+					break
+			}
+			particle.position = position
+			
+			const velocity = new Vector2()
+			const alpha = 3
+			const beta = 4
+			switch(settings.particles.moveDirection) {
+				case 'top':
+					velocity.set(
+						Random.floatBetween(
+							-settings.particles.maxVelocity / alpha,
+							settings.particles.maxVelocity / alpha
+						),
+						Random.floatBetween(
+							-settings.particles.maxVelocity,
+							-settings.particles.maxVelocity / beta
+						),
+					)
+					break
+				case 'right':
+					velocity.set(
+						Random.floatBetween(
+							settings.particles.maxVelocity,
+							settings.particles.maxVelocity / beta
+						),
+						Random.floatBetween(
+							-settings.particles.maxVelocity / alpha,
+							settings.particles.maxVelocity / alpha
+						),
+					)
+					break
+				case 'bottom':
+					velocity.set(
+						Random.floatBetween(
+							-settings.particles.maxVelocity / alpha,
+							settings.particles.maxVelocity / alpha
+						),
+						Random.floatBetween(
+							settings.particles.maxVelocity,
+							settings.particles.maxVelocity / beta
+						),
+					)
+					break
+				case 'left':
+					velocity.set(
+						Random.floatBetween(
+							-settings.particles.maxVelocity,
+							-settings.particles.maxVelocity / beta
+						),
+						Random.floatBetween(
+							-settings.particles.maxVelocity / alpha,
+							settings.particles.maxVelocity / alpha
+						),
+					)
+					break
+				default:
+				case 'random':
+					velocity.set(
+						Random.floatBetween(
+							-settings.particles.maxVelocity,
+							settings.particles.maxVelocity
+						),
+						Random.floatBetween(
+							-settings.particles.maxVelocity,
+							settings.particles.maxVelocity
+						),
+					)
+					break
+			}
+			particle.velocity = velocity
+
+      particle.radius = Random.floatBetween(0, settings.particles.maxRadius)
+    }
 
 		if (settings.staticParticles) {
 			for (const coords of settings.staticParticles) {
@@ -106,8 +200,7 @@ export default class Particles {
 		this._quadtree = new QuadTree(this._boundary, 4)
 		const activeParticles = this._particleManager.particles.filter((p) => p.active)
 		for (const particle of activeParticles) {
-			particle.position.x += particle.velocity.x
-			particle.position.y += particle.velocity.y
+			particle.update()
 
 			this.checkBoundary(particle, this._boundary)
 			this._quadtree.insert(particle)
@@ -179,7 +272,7 @@ export default class Particles {
 		return lines
 	}
 
-	// oneFrame = this.update
+	oneFrame = this.update
 
 	setSize(width, height) {
 		this._canvas.width = width

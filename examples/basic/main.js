@@ -7,15 +7,14 @@ const settings = {
   resize: true,
   particles: {
     amount: 250, // number
-    createStrategy: "random", // 'random'
+    createStrategy: 'even', // 'random' | 'even'
+    moveDirection: 'top', // 'random' | 'top'  | 'right'  | 'bottom'  | 'left' 
     distanceToLink: 150, // number
     linkedParticles: true, // boolean
     maxVelocity: 0.8, // number
     maxRadius: 4 // number
   },
   renderer: {
-    transparentBackground: false, // boolean
-    backgroundColor: "#186cb6", // color
     linearGradient: {
       x1: 0, // number
       y1: 0, // number
@@ -31,6 +30,6 @@ const settings = {
 
 const particles = new Particles(node)
 particles.init(settings)
-particles.start()
+particles.oneFrame()
 
 window.particles = particles
