@@ -11,13 +11,13 @@ export default class Particles {
 	constructor(canvas) {
 		this._canvas = canvas
 
-		this.ctx = this._canvas.getContext("2d")
+		this._ctx = this._canvas.getContext("2d")
 
 		this._particleManager = null
 
 		this._renderer = null
 
-		this._boundUpdate = this.update.bind(this)
+		this._boundUpdate = this._update.bind(this)
 
 		this._isRunning = false
 
@@ -140,14 +140,14 @@ export default class Particles {
 			}
 		}
 
-		this._renderer = new Renderer(this.ctx, settings.renderer.backgroundColor)
+		this._renderer = new Renderer(this._ctx, settings.renderer.backgroundColor)
 
 		this._renderer.transparentBackground = settings.renderer.transparentBackground
 
-		this.setSize(settings.renderer.width, settings.renderer.height)
+		this._setSize(settings.renderer.width, settings.renderer.height)
 
 		if (settings.renderer.linearGradient) {
-			const gradient = this.ctx.createLinearGradient(
+			const gradient = this._ctx.createLinearGradient(
 				settings.renderer.width * settings.renderer.linearGradient.x1,
 				settings.renderer.height * settings.renderer.linearGradient.y1,
 				settings.renderer.width * settings.renderer.linearGradient.x2,
@@ -161,15 +161,17 @@ export default class Particles {
 		this.debug = settings.debug
 
 		if (settings.resize) {
-			window.addEventListener('resize', this.onResize.bind(this))
+			window.addEventListener('resize', this._onResize.bind(this))
 		}
+
+		return this
 	}
 
-	onResize() {
+	_onResize() {
 		if (this._resizeTimeout) {
 			clearTimeout(this._resizeTimeout)
 		}
-		this._resizeTimeout = setTimeout(() => this.setSize(window.innerWidth, window.innerHeight), 100)
+		this._resizeTimeout = setTimeout(() => this._setSize(window.innerWidth, window.innerHeight), 100)
 	}
 
 	start() {
@@ -177,13 +179,15 @@ export default class Particles {
 		window.requestAnimationFrame(this._boundUpdate)
 		
 		console.info('Spark Partilces started!')
+		return this
 	}
 
 	stop() {
 		this._isRunning = false
+		return this
 	}
 
-	update() {
+	_update() {
 		const startTime = Date.now()
 
 		this._quadtree = new QuadTree(this._boundary, 4)
@@ -191,13 +195,13 @@ export default class Particles {
 		for (const particle of activeParticles) {
 			particle.update()
 
-			this.checkBoundary(particle, this._boundary)
+			this._checkBoundary(particle, this._boundary)
 			this._quadtree.insert(particle)
 		}
 
 		let lines
 		if (this._settings.particles.linkedParticles) {
-			lines = this.linkPartiles(this._particleManager.particles, this._settings.particles.distanceToLink)
+			lines = this._linkPartiles(this._particleManager.particles, this._settings.particles.distanceToLink)
 		}
 
 		this._renderer.particles = this._particleManager.particles
@@ -218,9 +222,11 @@ export default class Particles {
 			this._deltas.shift()
 		}
 		const a = this._deltas.filter((v) => v !== undefined)
+
+		return this
 	}
 
-	linkPartiles(particles, distanceToLink) {
+	_linkPartiles(particles, distanceToLink) {
 		const lines = []
 
 		for (let a = 0; a < particles.length - 1; a++) {
@@ -261,9 +267,9 @@ export default class Particles {
 		return lines
 	}
 
-	oneFrame = this.update
+	oneFrame = this._update
 
-	setSize(width, height) {
+	_setSize(width, height) {
 		this._canvas.width = width
 		this._canvas.height = height
 
@@ -275,6 +281,8 @@ export default class Particles {
 			height + this._settings.particles.distanceToLink * 2
 		)
 		this._quadtree = new QuadTree(this._boundary, 4)
+
+		return this
 	}
 
 	get debug() {
@@ -286,7 +294,7 @@ export default class Particles {
 		this._renderer._debug = v
 	}
 
-	checkBoundary(particle, boundary) {
+	_checkBoundary(particle, boundary) {
 		if (particle.position.x < boundary.left) {
 			particle.position.x = boundary.right
 			return

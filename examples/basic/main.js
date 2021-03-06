@@ -29,7 +29,7 @@ const settings = {
 }
 
 const particles = new Particles(node)
-particles.init(settings)
-particles.start()
+  .init(settings)
+  .start()
 
 window.particles = particles
