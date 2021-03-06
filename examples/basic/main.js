@@ -1,13 +1,12 @@
-import Particles from "./Particles.js"
+import Particles from "../Particles.js"
 
 const node = document.getElementById("particles")
 
-const particles = new Particles(node, {
+const settings = {
   debug: true, // boolean
   resize: true,
   particles: {
     amount: 250, // number
-    color: "#fff", // color
     createStrategy: "random", // 'random'
     distanceToLink: 150, // number
     linkedParticles: true, // boolean
@@ -28,6 +27,10 @@ const particles = new Particles(node, {
     width: window.innerWidth, // string
     height: window.innerHeight, // string
   },
-})
+}
+
+const particles = new Particles(node)
+particles.init(settings)
+particles.start()
 
 window.particles = particles

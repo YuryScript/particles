@@ -5,7 +5,7 @@
 module.exports = {
   mount: {
     examples: { url: "/", static: true, resolve: true },
-    src: { url: "/src", static: false, resolve: true },
+    src: { url: "/", static: false, resolve: true },
   },
   plugins: [
     [

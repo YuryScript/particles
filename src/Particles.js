@@ -7,12 +7,10 @@ import QuadTree from "./QuadTree"
 import Circle from "./Circle"
 
 export default class Particles {
-	constructor(canvas, settings) {
+	constructor(canvas) {
 		this._canvas = canvas
 
 		this.ctx = this._canvas.getContext("2d")
-
-		this.settings = settings
 
 		this._particleManager = null
 
@@ -28,33 +26,18 @@ export default class Particles {
 
 		this._debug = false
 
-		this._viewport = new Rectangle()
-
 		this._boundary = null
 
 		this._quadtree = null
 
 		this._resizeTimeout = null
-
-		if (this._settings.resize) {
-			window.addEventListener('resize', this.onResize.bind(this))
-		}
-
-		this.start()
-		console.log("Spark Particles started!")
 	}
 
-	get settings() {
-		return this._settings
-	}
-
-	set settings(settings) {
+	init(settings) {
 		this._settings = settings
 
-		this._init(settings)
-	}
+		this._particleManager = new ParticleManager()
 
-	_init(settings) {
 		this._particleManager.generateParticlesRandomly(
 			settings.particles.amount,
 			settings.renderer.width,
@@ -76,6 +59,8 @@ export default class Particles {
 
 		this._renderer = new Renderer(this.ctx, settings.renderer.backgroundColor)
 
+		this._renderer.transparentBackground = settings.renderer.transparentBackground
+
 		this.setSize(settings.renderer.width, settings.renderer.height)
 
 		if (settings.renderer.linearGradient) {
@@ -91,6 +76,10 @@ export default class Particles {
 		}
 
 		this.debug = settings.debug
+
+		if (settings.resize) {
+			window.addEventListener('resize', this.onResize.bind(this))
+		}
 	}
 
 	onResize() {
@@ -103,6 +92,8 @@ export default class Particles {
 	start() {
 		this._isRunning = true
 		window.requestAnimationFrame(this._boundUpdate)
+		
+		console.info('Spark Partilces started!')
 	}
 
 	stop() {
@@ -188,12 +179,13 @@ export default class Particles {
 		return lines
 	}
 
+	// oneFrame = this.update
+
 	setSize(width, height) {
 		this._canvas.width = width
 		this._canvas.height = height
 
 		this._renderer.viewportSize = new Vector2(width, height)
-		this._viewport.set(0, 0, width, height)
 		this._boundary = new Rectangle(
 			-this._settings.particles.distanceToLink,
 			-this._settings.particles.distanceToLink,
@@ -215,14 +207,17 @@ export default class Particles {
 	checkBoundary(particle, boundary) {
 		if (particle.position.x < boundary.left) {
 			particle.position.x = boundary.right
+			return
 		}
 
 		if (particle.position.x > boundary.right) {
 			particle.position.x = boundary.left
+			return
 		}
 
 		if (particle.position.y < boundary.top) {
 			particle.position.y = boundary.bottom
+			return
 		}
 
 		if (particle.position.y > boundary.bottom) {

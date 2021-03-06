@@ -28,7 +28,7 @@ export class ParticleManager {
 
   generateParticlesRandomly(partilcesAmount, maxX, maxY, offset, maxVX, maxVY, maxRadius) {
     this.particles = []
-    for (const a = 0; a < partilcesAmount; a++) {
+    for (let a = 0; a < partilcesAmount; a++) {
       const particle = this.createParticle()
       particle.position.set(Random.intBetween(-offset, maxX + offset), Random.intBetween(-offset, maxY + offset))
       particle.velocity.set(Random.floatBetween(-maxVX, maxVX), Random.floatBetween(-maxVY, maxVY))
