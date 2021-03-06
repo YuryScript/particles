@@ -44,17 +44,6 @@ export default class Particles {
 
 			const position = new Vector2()
 			switch(settings.particles.createStrategy) {
-				case 'even':
-					const widthToHeight = settings.renderer.width / settings.renderer.height
-					const heightToWidth = settings.renderer.height / settings.renderer.width
-					const sum = widthToHeight + heightToWidth
-					const pInRow = Math.round(settings.particles.amount / sum * widthToHeight)
-					const pInColumn = Math.round(settings.particles.amount / sum * heightToWidth)
-					console.log(widthToHeight, heightToWidth, pInRow, pInColumn, pInRow + pInColumn)
-					const width = Math.round(settings.renderer.width / pInRow)
-					const height = Math.round(settings.renderer.height / pInColumn)
-					// position.set(a % 2 width / , 0)
-					break
 				default:
 				case 'random':
 					position.set(

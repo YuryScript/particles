@@ -7,7 +7,7 @@ const settings = {
   resize: true,
   particles: {
     amount: 250, // number
-    createStrategy: 'even', // 'random' | 'even'
+    createStrategy: 'random', // 'random'
     moveDirection: 'top', // 'random' | 'top'  | 'right'  | 'bottom'  | 'left' 
     distanceToLink: 150, // number
     linkedParticles: true, // boolean
