@@ -16,10 +16,8 @@ export class Particle {
 }
 
 export class ParticleManager {
-  constructor(size) {
-    this.particles = new Array(size)
-
-    this.init(0, size)
+  constructor() {
+    this.particles = []
   }
   
   createParticle() {
@@ -28,17 +26,10 @@ export class ParticleManager {
     return newParticle
   }
 
-  /** [min, max) */
-  init(min, max) {
-    for (let i = min; i < max; i++) {
-      this.particles[i] = new Particle()
-    }
-
-    return this
-  }
-
-  generateParticlesRandomly(maxX, maxY, offset, maxVX, maxVY, maxRadius) {
-    for (const particle of this.particles) {
+  generateParticlesRandomly(partilcesAmount, maxX, maxY, offset, maxVX, maxVY, maxRadius) {
+    this.particles = []
+    for (const a = 0; a < partilcesAmount; a++) {
+      const particle = this.createParticle()
       particle.position.set(Random.intBetween(-offset, maxX + offset), Random.intBetween(-offset, maxY + offset))
       particle.velocity.set(Random.floatBetween(-maxVX, maxVX), Random.floatBetween(-maxVY, maxVY))
       particle.radius = Random.floatBetween(0.2, maxRadius)

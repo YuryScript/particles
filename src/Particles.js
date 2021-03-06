@@ -12,6 +12,8 @@ export default class Particles {
 
 		this.ctx = this._canvas.getContext("2d")
 
+		this.settings = settings
+
 		this._particleManager = null
 
 		this._renderer = null
@@ -19,10 +21,6 @@ export default class Particles {
 		this._boundUpdate = this.update.bind(this)
 
 		this._isRunning = false
-
-		this._linkedParticles
-
-		this._distanceToLink
 
 		this._ticks = 0
 
@@ -32,23 +30,70 @@ export default class Particles {
 
 		this._viewport = new Rectangle()
 
-		this._boundary
+		this._boundary = null
 
-		this._quadtree
+		this._quadtree = null
 
-		this._resizeTimeout
+		this._resizeTimeout = null
 
-		this.processSettings(settings)
-
-		if (this._resize) {
+		if (this._settings.resize) {
 			window.addEventListener('resize', this.onResize.bind(this))
 		}
 
 		this.start()
-		console.log("Particles started!")
+		console.log("Spark Particles started!")
 	}
 
-	onResize(e) {
+	get settings() {
+		return this._settings
+	}
+
+	set settings(settings) {
+		this._settings = settings
+
+		this._init(settings)
+	}
+
+	_init(settings) {
+		this._particleManager.generateParticlesRandomly(
+			settings.particles.amount,
+			settings.renderer.width,
+			settings.renderer.height,
+			settings.particles.distanceToLink,
+			settings.particles.maxVelocity,
+			settings.particles.maxVelocity,
+			settings.particles.maxRadius,
+		)
+
+		if (settings.staticParticles) {
+			for (const coords of settings.staticParticles) {
+				const p = this._particleManager.createParticle()
+				p.active = false
+				p.radius = 0
+				p.position.set(settings.renderer.width * coords[0], settings.renderer.height * coords[1])
+			}
+		}
+
+		this._renderer = new Renderer(this.ctx, settings.renderer.backgroundColor)
+
+		this.setSize(settings.renderer.width, settings.renderer.height)
+
+		if (settings.renderer.linearGradient) {
+			const gradient = this.ctx.createLinearGradient(
+				settings.renderer.width * settings.renderer.linearGradient.x1,
+				settings.renderer.height * settings.renderer.linearGradient.y1,
+				settings.renderer.width * settings.renderer.linearGradient.x2,
+				settings.renderer.height * settings.renderer.linearGradient.y2,
+			);
+			gradient.addColorStop(0, settings.renderer.linearGradient.color1);
+			gradient.addColorStop(1, settings.renderer.linearGradient.color2);
+			this._renderer.gradient = gradient;
+		}
+
+		this.debug = settings.debug
+	}
+
+	onResize() {
 		if (this._resizeTimeout) {
 			clearTimeout(this._resizeTimeout)
 		}
@@ -78,8 +123,8 @@ export default class Particles {
 		}
 
 		let lines
-		if (this._linkedParticles) {
-			lines = this.linkPartiles(this._particleManager.particles, this._distanceToLink)
+		if (this._settings.particles.linkedParticles) {
+			lines = this.linkPartiles(this._particleManager.particles, this._settings.particles.distanceToLink)
 		}
 
 		this._renderer.particles = this._particleManager.particles
@@ -150,10 +195,10 @@ export default class Particles {
 		this._renderer.viewportSize = new Vector2(width, height)
 		this._viewport.set(0, 0, width, height)
 		this._boundary = new Rectangle(
-			-this._distanceToLink,
-			-this._distanceToLink,
-			width + this._distanceToLink * 2,
-			height + this._distanceToLink * 2
+			-this._settings.particles.distanceToLink,
+			-this._settings.particles.distanceToLink,
+			width + this._settings.particles.distanceToLink * 2,
+			height + this._settings.particles.distanceToLink * 2
 		)
 		this._quadtree = new QuadTree(this._boundary, 4)
 	}
@@ -165,53 +210,6 @@ export default class Particles {
 	set debug(v) {
 		this._debug = v
 		this._renderer._debug = v
-	}
-
-	processSettings(settings) {
-		this._resize = settings.resize
-
-		this._linkedParticles = settings.particles.linkedParticles
-
-		this._distanceToLink = settings.particles.distanceToLink
-
-		this._particleManager = new ParticleManager(settings.particles.amount)
-
-		this._particleManager.generateParticlesRandomly(
-			settings.renderer.width,
-			settings.renderer.height,
-			this._distanceToLink,
-			settings.particles.maxVelocity,
-			settings.particles.maxVelocity,
-			settings.particles.maxRadius,
-		)
-
-		if (settings.staticParticles) {
-			for (const coords of settings.staticParticles) {
-				const p = this._particleManager.createParticle()
-				p.active = false
-				p.radius = 0
-				p.position.set(settings.renderer.width * coords[0], settings.renderer.height * coords[1])
-			}
-		}
-
-		this._renderer = new Renderer(this.ctx, settings.renderer.backgroundColor)
-
-		this.setSize(settings.renderer.width, settings.renderer.height)
-
-		if (settings.renderer.linearGradient) {
-			const gradient = this.ctx.createLinearGradient(
-				settings.renderer.width * settings.renderer.linearGradient.x1,
-				settings.renderer.height * settings.renderer.linearGradient.y1,
-				settings.renderer.width * settings.renderer.linearGradient.x2,
-				settings.renderer.height * settings.renderer.linearGradient.y2,
-			);
-			gradient.addColorStop(0, settings.renderer.linearGradient.color1);
-			gradient.addColorStop(1, settings.renderer.linearGradient.color2);
-			this._renderer.gradient = gradient;
-		}
-
-		this.debug = settings.debug
-
 	}
 
 	checkBoundary(particle, boundary) {

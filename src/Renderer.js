@@ -1,5 +1,3 @@
-import Line from "./Line"
-import { Particle } from "./Particle"
 import Vector2 from "./Vector2"
 
 export default class Renderer {
