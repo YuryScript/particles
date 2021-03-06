@@ -8,7 +8,7 @@ const settings = {
   particles: {
     amount: 250, // number
     createStrategy: 'random', // 'random'
-    moveDirection: 'top', // 'random' | 'top'  | 'right'  | 'bottom'  | 'left' 
+    moveDirection: 'random', // 'random' | 'top'  | 'right'  | 'bottom'  | 'left' 
     distanceToLink: 150, // number
     linkedParticles: true, // boolean
     maxVelocity: 0.8, // number
@@ -30,6 +30,6 @@ const settings = {
 
 const particles = new Particles(node)
 particles.init(settings)
-particles.oneFrame()
+particles.start()
 
 window.particles = particles
