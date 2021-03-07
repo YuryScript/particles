@@ -1,4 +1,4 @@
-import Vector2 from "./Vector2"
+import Vector2 from "./Vector2.js"
 
 export default class Line {
 	constructor(a = new Vector2(), b = new Vector2()) {

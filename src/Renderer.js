@@ -1,4 +1,4 @@
-import Vector2 from "./Vector2"
+import Vector2 from "./Vector2.js"
 
 export default class Renderer {
   constructor(ctx, backgroundColor = '#000', viewportSize = new Vector2(300, 150)) {
