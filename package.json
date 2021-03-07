@@ -3,11 +3,13 @@
   "version": "0.2.1",
   "description": "Lightweight and fast Particle library written in JavaScript",
   "main": "./Particles.js",
+  "type": "module",
   "scripts": {
     "start": "snowpack dev",
     "build": "snowpack build",
     "release": "npm publish ./build/src",
-    "postbuild": "node ./scripts/postbuild.js"
+    "postbuild": "node ./scripts/postbuild.js",
+    "test": "node ./test/index.js"
   },
   "repository": {
     "type": "git",
