@@ -24,12 +24,14 @@ import Particles from "spark-particles"
 
 const node = document.getElementById("particles")
 
-const particles = new Particles(node, {
+const canvas = document.getElementById("particles")
+
+const settings = {
   debug: false, // boolean
+  resize: true, // boolean
   particles: {
     amount: 250, // number
-    color: "#fff", // color
-    createStrategy: "random", // 'random'
+    moveDirection: 'random', // 'random' | 'top'  | 'right'  | 'bottom'  | 'left' 
     distanceToLink: 150, // number
     linkedParticles: true, // boolean
     maxVelocity: 0.8, // number
@@ -49,7 +51,11 @@ const particles = new Particles(node, {
     width: window.innerWidth, // string
     height: window.innerHeight, // string
   },
-})
+}
+
+new Particles(canvas)
+  .init(settings)
+  .start()
 
 ```
 ## Contributing

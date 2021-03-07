@@ -1,22 +1,19 @@
-import Particles from "./Particles.js"
+import Particles from "../../src/Particles.js"
 
 const node = document.getElementById("particles")
 
-const particles = new Particles(node, {
+const settings = {
   debug: true, // boolean
   resize: true,
   particles: {
     amount: 250, // number
-    color: "#fff", // color
-    createStrategy: "random", // 'random'
+    moveDirection: 'random', // 'random' | 'top'  | 'right'  | 'bottom'  | 'left' 
     distanceToLink: 150, // number
     linkedParticles: true, // boolean
     maxVelocity: 0.8, // number
     maxRadius: 4 // number
   },
   renderer: {
-    transparentBackground: false, // boolean
-    backgroundColor: "#186cb6", // color
     linearGradient: {
       x1: 0, // number
       y1: 0, // number
@@ -28,6 +25,10 @@ const particles = new Particles(node, {
     width: window.innerWidth, // string
     height: window.innerHeight, // string
   },
-})
+}
+
+const particles = new Particles(node)
+  .init(settings)
+  .start()
 
 window.particles = particles

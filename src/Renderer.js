@@ -1,5 +1,3 @@
-import Line from "./Line"
-import { Particle } from "./Particle"
 import Vector2 from "./Vector2"
 
 export default class Renderer {
@@ -8,17 +6,17 @@ export default class Renderer {
 
     this.lines = []
 
-    this.deltas
+    this.deltas = []
 
-    this.gradient
+    this.gradient = null
 
     this._ctx = ctx
 
-    this._debug
+    this._debug = false
 
     this._viewportSize = viewportSize
 
-    this._transparentBackground = false
+    this.transparentBackground = true
 
     this._backgroundColor = backgroundColor
 
@@ -30,8 +28,8 @@ export default class Renderer {
   }
 
   render() {
-    if (this._transparentBackground) {
-      this._ctx.clearRect()
+    if (this.transparentBackground) {
+      this._ctx.clearRect(0, 0, this._viewportSize.x, this._viewportSize.y)
     } else if (this.gradient) {
       this._ctx.fillStyle = this.gradient
       this._ctx.fillRect(0, 0, this._viewportSize.x, this._viewportSize.y)
@@ -58,8 +56,6 @@ export default class Renderer {
     }
     this._ctx.fill()
 
-    // TODO
-    // const optimized = this.line()
     for (const line of this.lines) {
       this._ctx.beginPath()
       this._ctx.strokeStyle = `rgba(255,255,255,${line.alpha})`
@@ -81,32 +77,39 @@ export default class Renderer {
   }
 
   drawPerformanceGraphic() {
+    const normalize = (val, min, max) => (val - min) / (max - min)
+
     const raw = this.deltas.filter((a) => Boolean(a))
     const min = Math.min(...raw)
     const max = Math.max(...raw)
+
     this._ctx.font = '16px monospace'
     this._ctx.strokeStyle = `#fff`
-    this._ctx.beginPath()
+    this._ctx.fillStyle = `#fff`
+
     let offsetX = 0
     const startY = 70
+
+    this._ctx.beginPath()
     this._ctx.moveTo(offsetX, startY - this.deltas[0])
     for (const delta of this.deltas) {
-      // [0, 50]
-      const offsetY = startY - (delta / max * 50)
+      const offsetY = startY - 50 * normalize(delta, min, max)
       this._ctx.lineTo(offsetX, offsetY)
-      offsetX++
+      offsetX += 1
     }
+
     this._ctx.moveTo(0, startY)
     this._ctx.lineTo(this.deltas.length, startY)
-    this._ctx.fillText('0', this.deltas.length, startY + 4)
+    this._ctx.fillText(min, this.deltas.length, startY + 4)
+
     this._ctx.moveTo(0, startY - 50)
     this._ctx.lineTo(this.deltas.length, startY - 50)
     this._ctx.fillText(max, this.deltas.length, startY - 50 + 4)
+
     this._ctx.closePath()
     this._ctx.stroke()
 
-    this._ctx.fillStyle = `#fff`
-    this._ctx.fillText(`${this.deltas[this.deltas.length - 1]?.toString()} ms (${min}-${max})`, 100, 15)
-    this._ctx.fillText(`${this.particles.length.toString()} part`, 0, 15)
+    this._ctx.fillText(`${this.particles.length.toString()} particles`, 0, 15)
+    this._ctx.fillText(`${this.deltas[this.deltas.length - 1]?.toString()} ms`, 130, 15)
   }
 }
