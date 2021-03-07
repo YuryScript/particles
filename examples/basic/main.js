@@ -1,4 +1,4 @@
-import Particles from "../Particles.js"
+import Particles from "../../src/Particles.js"
 
 const node = document.getElementById("particles")
 
@@ -7,7 +7,6 @@ const settings = {
   resize: true,
   particles: {
     amount: 250, // number
-    createStrategy: 'random', // 'random'
     moveDirection: 'random', // 'random' | 'top'  | 'right'  | 'bottom'  | 'left' 
     distanceToLink: 150, // number
     linkedParticles: true, // boolean

@@ -4,43 +4,18 @@
       "bytes": 5367,
       "imports": []
     },
-    "src/Line.js": {
-      "bytes": 288,
+    "src/Renderer.js": {
+      "bytes": 3377,
       "imports": [
         {
           "path": "src/Vector2.js",
           "kind": "import-statement"
         }
       ]
-    },
-    "src/Random.js": {
-      "bytes": 516,
-      "imports": []
     },
     "src/Particle.js": {
-      "bytes": 1095,
+      "bytes": 509,
       "imports": [
-        {
-          "path": "src/Vector2.js",
-          "kind": "import-statement"
-        },
-        {
-          "path": "src/Random.js",
-          "kind": "import-statement"
-        }
-      ]
-    },
-    "src/Renderer.js": {
-      "bytes": 3366,
-      "imports": [
-        {
-          "path": "src/Line.js",
-          "kind": "import-statement"
-        },
-        {
-          "path": "src/Particle.js",
-          "kind": "import-statement"
-        },
         {
           "path": "src/Vector2.js",
           "kind": "import-statement"
@@ -49,6 +24,15 @@
     },
     "src/Rectangle.js": {
       "bytes": 1757,
+      "imports": [
+        {
+          "path": "src/Vector2.js",
+          "kind": "import-statement"
+        }
+      ]
+    },
+    "src/Line.js": {
+      "bytes": 288,
       "imports": [
         {
           "path": "src/Vector2.js",
@@ -74,8 +58,12 @@
         }
       ]
     },
+    "src/Random.js": {
+      "bytes": 516,
+      "imports": []
+    },
     "src/Particles.js": {
-      "bytes": 6116,
+      "bytes": 8121,
       "imports": [
         {
           "path": "src/Renderer.js",
@@ -104,6 +92,10 @@
         {
           "path": "src/Circle.js",
           "kind": "import-statement"
+        },
+        {
+          "path": "src/Random.js",
+          "kind": "import-statement"
         }
       ]
     }
@@ -119,29 +111,29 @@
         "src/Vector2.js": {
           "bytesInOutput": 1827
         },
-        "src/Line.js": {
-          "bytesInOutput": 172
-        },
-        "src/Random.js": {
-          "bytesInOutput": 294
+        "src/Renderer.js": {
+          "bytesInOutput": 2171
         },
         "src/Particle.js": {
-          "bytesInOutput": 517
-        },
-        "src/Renderer.js": {
-          "bytesInOutput": 2097
+          "bytesInOutput": 254
         },
         "src/Rectangle.js": {
           "bytesInOutput": 1035
         },
+        "src/Line.js": {
+          "bytesInOutput": 172
+        },
         "src/QuadTree.js": {
           "bytesInOutput": 1053
         },
+        "src/Random.js": {
+          "bytesInOutput": 294
+        },
         "src/Particles.js": {
-          "bytesInOutput": 3343
+          "bytesInOutput": 4388
         }
       },
-      "bytes": 10360
+      "bytes": 11362
     }
   }
 }

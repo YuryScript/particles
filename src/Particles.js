@@ -42,24 +42,17 @@ export default class Particles {
 		for (let a = 0; a < settings.particles.amount; a++) {
       const particle = this._particleManager.createParticle()
 
-			const position = new Vector2()
-			switch(settings.particles.createStrategy) {
-				default:
-				case 'random':
-					position.set(
-						Random.intBetween(
-							-settings.particles.distanceToLink,
-							settings.renderer.width + settings.particles.distanceToLink
-						), 
-						Random.intBetween(
-							-settings.particles.distanceToLink,
-							settings.renderer.height + settings.particles.distanceToLink
-						)
-					)
-					break
-			}
-			particle.position = position
-			
+			particle.position.set(
+				Random.intBetween(
+					-settings.particles.distanceToLink,
+					settings.renderer.width + settings.particles.distanceToLink
+				), 
+				Random.intBetween(
+					-settings.particles.distanceToLink,
+					settings.renderer.height + settings.particles.distanceToLink
+				)
+			)
+
 			const velocity = new Vector2()
 			const alpha = 3
 			const beta = 4
@@ -199,7 +192,7 @@ export default class Particles {
 			this._quadtree.insert(particle)
 		}
 
-		let lines
+		let lines = []
 		if (this._settings.particles.linkedParticles) {
 			lines = this._linkPartiles(this._particleManager.particles, this._settings.particles.distanceToLink)
 		}
