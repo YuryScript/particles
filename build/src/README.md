@@ -11,7 +11,7 @@ Lightweight and fast Particle library written in JavaScript
 
 Zero Dependencies!
 
-[Examples](https://gelltorn.github.io/particles/examples/)
+[Basic example](https://gelltorn.github.io/particles/examples/basic/)
 
 ## Installation
 1. `npm i spark-particles --save`
