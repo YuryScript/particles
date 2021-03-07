@@ -1,11 +1,11 @@
-import Renderer from "./Renderer"
-import { ParticleManager } from "./Particle"
-import Vector2 from "./Vector2"
-import Rectangle from "./Rectangle"
-import Line from "./Line"
-import QuadTree from "./QuadTree"
-import Circle from "./Circle"
-import Random from "./Random"
+import Renderer from "./Renderer.js"
+import { ParticleManager } from "./Particle.js"
+import Vector2 from "./Vector2.js"
+import Rectangle from "./Rectangle.js"
+import Line from "./Line.js"
+import QuadTree from "./QuadTree.js"
+import Circle from "./Circle.js"
+import Random from "./Random.js"
 
 export default class Particles {
 	constructor(canvas) {

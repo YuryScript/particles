@@ -1,4 +1,4 @@
-import Vector2 from "./Vector2"
+import Vector2 from "./Vector2.js"
 
 export default class Rectangle {
 	constructor(x = 0, y = 0, width = 0, height = 0) {
