@@ -48,8 +48,8 @@ const settings = {
       color1: '#327fc2', // color
       color2: '#014987', // color
     },
-    width: window.innerWidth, // string
-    height: window.innerHeight, // string
+    width: window.innerWidth, // number
+    height: window.innerHeight, // number
   },
 }
 
