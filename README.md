@@ -22,8 +22,6 @@ See Basic example
 ```javascript
 import Particles from "spark-particles"
 
-const node = document.getElementById("particles")
-
 const canvas = document.getElementById("particles")
 
 const settings = {
@@ -65,6 +63,6 @@ new Particles(canvas)
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 ## History
-TODO: Write history
+1.0.0 Release
 ## License
 MIT
