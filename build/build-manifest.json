@@ -1,11 +1,11 @@
 {
   "inputs": {
     "src/Vector2.js": {
-      "bytes": 5367,
+      "bytes": 5153,
       "imports": []
     },
     "src/Renderer.js": {
-      "bytes": 3377,
+      "bytes": 3262,
       "imports": [
         {
           "path": "src/Vector2.js",
@@ -14,7 +14,7 @@
       ]
     },
     "src/Particle.js": {
-      "bytes": 509,
+      "bytes": 478,
       "imports": [
         {
           "path": "src/Vector2.js",
@@ -23,7 +23,7 @@
       ]
     },
     "src/Rectangle.js": {
-      "bytes": 1757,
+      "bytes": 1665,
       "imports": [
         {
           "path": "src/Vector2.js",
@@ -32,7 +32,7 @@
       ]
     },
     "src/Line.js": {
-      "bytes": 288,
+      "bytes": 277,
       "imports": [
         {
           "path": "src/Vector2.js",
@@ -41,7 +41,7 @@
       ]
     },
     "src/QuadTree.js": {
-      "bytes": 2096,
+      "bytes": 2010,
       "imports": [
         {
           "path": "src/Rectangle.js",
@@ -50,7 +50,7 @@
       ]
     },
     "src/Circle.js": {
-      "bytes": 280,
+      "bytes": 268,
       "imports": [
         {
           "path": "src/Vector2.js",
@@ -59,11 +59,11 @@
       ]
     },
     "src/Random.js": {
-      "bytes": 516,
+      "bytes": 490,
       "imports": []
     },
     "src/Particles.js": {
-      "bytes": 8121,
+      "bytes": 7811,
       "imports": [
         {
           "path": "src/Renderer.js",

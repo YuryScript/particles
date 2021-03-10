@@ -1,6 +1,6 @@
 {
   "name": "spark-particles",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lightweight and fast Particle library written in JavaScript",
   "main": "./Particles.js",
   "scripts": {
@@ -25,7 +25,8 @@
     "html",
     "html5",
     "web",
-    "background"
+    "background",
+    "front-end"
   ],
   "author": "https://github.com/GellTorn",
   "license": "MIT",
