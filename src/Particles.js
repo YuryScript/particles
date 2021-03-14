@@ -6,6 +6,7 @@ import Line from "./Line.js"
 import QuadTree from "./QuadTree.js"
 import Circle from "./Circle.js"
 import Random from "./Random.js"
+import { Entity, PositionComponent, RotationComponent } from './Components.js'
 
 export default class Particles {
 	constructor(canvas) {
@@ -31,7 +32,10 @@ export default class Particles {
 
 		this._quadtree = null
 
-		this._resizeTimeout = null
+    this._resizeTimeout = null
+    
+    const n = new Entity('Particle', [PositionComponent.create(), RotationComponent.create()])
+    console.log(n)
 	}
 
 	init(settings) {
