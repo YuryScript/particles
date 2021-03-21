@@ -94,6 +94,16 @@ export default class Vector2 {
 
     return dx * dx + dy * dy
   }
+
+  clampLength(min, max) {
+    const length = this.length()
+    if (length > max) {
+      this.setLength(max)
+    } else if (length < min) {
+      this.setLength(min)
+    }
+    return this
+  }
   /** Calculate the length (or magnitude) of this Vector. */
   length() {
     const x = this.x
