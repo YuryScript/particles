@@ -1,4 +1,4 @@
-import Vector2 from "./Vector2.js"
+import Vector2 from './Vector2.js'
 
 export default class Renderer {
   constructor(ctx, backgroundColor = '#000', viewportSize = new Vector2(300, 150)) {
@@ -46,7 +46,6 @@ export default class Renderer {
     for (const particle of particlesWithLetter) {
       this._ctx.fillText(particle.letter, particle.position.x - 8, particle.position.y + 10)
     }
-
 
     this._ctx.fillStyle = `rgba(255,255,255,0.5)`
     this._ctx.beginPath()

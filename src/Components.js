@@ -1,9 +1,6 @@
 import Vector2 from './Vector2.js'
 
-export class Component {
-  
-}
-
+export class Component {}
 
 export class PositionComponent extends Component {
   constructor() {
@@ -51,6 +48,17 @@ export class Scene {
     return this
   }
 
+  getEntities(componentsInclude) {
+    return this.entities.filter((entity) => {
+      for (const component of componentsInclude) {
+        if (component in entity) {
+          return true
+        }
+      }
+      return false
+    })
+  }
+
   createEntity(name, components) {
     const newId = this.id.getId()
     const entity = new this(newId, name, components)
@@ -82,7 +90,7 @@ export class IdGiver {
 export class Entity {
   constructor(id, name = 'Entity', componentsToInit = []) {
     this.id = id
-    
+
     this.name = name
 
     this._init(componentsToInit)
@@ -98,21 +106,12 @@ export class Entity {
 export class MovementSystem {
   constructor(scene) {
     this.scene = scene
-
-    this.entitiesToUpdate = []
-  }
-
-  getEntities() {
-    this.entitiesToUpdate = this.scene.entities.filter((entity) => {
-      return (entity?.PositionComponent && entity?.MovementComponent)
-    })
   }
 
   update() {
-    this.getEntities()
-
-    this.entities.forEach((entity) => {
+    this.scene.getEntities(['PositionComponent', 'MovementComponent']).forEach((entity) => {
       entity.MovementComponent.velocity.add(entity.MovementComponent.acceleration)
+
       entity.PositionComponent.position.add(entity.MovementComponent.velocity)
     })
   }

@@ -1,17 +1,17 @@
-import Particles from "../../src/Particles.js"
+import Particles from '../../src/Particles.js'
 
-const node = document.getElementById("particles")
+const node = document.getElementById('particles')
 
 const settings = {
   debug: true, // boolean
   resize: true,
   particles: {
     amount: 250, // number
-    moveDirection: 'random', // 'random' | 'top'  | 'right'  | 'bottom'  | 'left' 
+    moveDirection: 'random', // 'random' | 'top'  | 'right'  | 'bottom'  | 'left'
     distanceToLink: 150, // number
     linkedParticles: true, // boolean
     maxVelocity: 0.8, // number
-    maxRadius: 4 // number
+    maxRadius: 4, // number
   },
   renderer: {
     linearGradient: {
@@ -27,8 +27,6 @@ const settings = {
   },
 }
 
-const particles = new Particles(node)
-  .init(settings)
-  .start()
+const particles = new Particles(node).init(settings).start()
 
 window.particles = particles
