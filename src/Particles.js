@@ -34,8 +34,8 @@ export default class Particles {
 
     this._resizeTimeout = null
 
-    // const n = new Entity('Particle', [PositionComponent.create(), RotationComponent.create()])
-    // console.log(n)
+    const n = new Entity('Particle', [PositionComponent.create(), RotationComponent.create()])
+    console.log(n)
   }
 
   init(settings) {
