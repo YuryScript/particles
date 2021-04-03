@@ -141,7 +141,7 @@ export default class Particles {
     if (settings.renderer.dpiMultiplier) {
       this._dpiMultiplier = settings.renderer.dpiMultiplier
     } else {
-      this._dpiMultiplier = 2
+      this._dpiMultiplier = 1
     }
 
     this._renderer = new Renderer(
