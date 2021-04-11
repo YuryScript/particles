@@ -24,21 +24,11 @@ export class RotationComponent {
 
 export class Scene {
   constructor(systemsToInit = []) {
-    this.systemsToInit = systemsToInit
-
     this.systems = []
     /** readonly */
     this.entities = []
 
     this.id = new IdGiver()
-  }
-
-  init() {
-    this.systems = this.systemsToInit.map((System) => {
-      const system = new System()
-      system.scene = this
-      return system
-    })
   }
 
   addSystem(System) {
@@ -50,18 +40,22 @@ export class Scene {
 
   getEntities(componentsInclude) {
     return this.entities.filter((entity) => {
-      for (const component of componentsInclude) {
-        if (component in entity) {
-          return true
+      for (const componentName of componentsInclude) {
+        let count = 0
+        if (entity.components[componentName]) {
+          count += 1
+          if (count === componentsInclude.length) {
+            return true
+          }
         }
       }
       return false
     })
   }
 
-  createEntity(name, components) {
+  createEntity(name) {
     const newId = this.id.getId()
-    const entity = new this(newId, name, components)
+    const entity = new this(newId, name)
     this.entities.push(component)
     return entity
   }
@@ -88,31 +82,31 @@ export class IdGiver {
 }
 
 export class Entity {
-  constructor(id, name = 'Entity', componentsToInit = []) {
+  constructor(id, name = 'Entity') {
     this.id = id
 
     this.name = name
 
-    this._init(componentsToInit)
+    this.components = {}
   }
 
-  _init(componentsToInit) {
-    componentsToInit.forEach((Component) => {
-      this[Component.name] = new Component()
-    })
+  addComponent(component) {
+    this.components[component.name] = component
   }
 }
 
 export class MovementSystem {
   constructor(scene) {
     this.scene = scene
+
+    this.components = ['PositionComponent', 'MovementComponent']
   }
 
   update() {
-    this.scene.getEntities(['PositionComponent', 'MovementComponent']).forEach((entity) => {
-      entity.MovementComponent.velocity.add(entity.MovementComponent.acceleration)
+    this.scene.getEntities(this.components).forEach((entity) => {
+      entity.components.MovementComponent.velocity.add(entity.MovementComponent.acceleration)
 
-      entity.PositionComponent.position.add(entity.MovementComponent.velocity)
+      entity.components.PositionComponent.position.add(entity.MovementComponent.velocity)
     })
   }
 }
