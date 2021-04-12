@@ -34,30 +34,7 @@ export default class Renderer {
   }
 
   render() {
-    if (this.transparentBackground) {
-      this._ctx.clearRect(
-        0,
-        0,
-        this._viewportSize.x * this._dpiMultiplier,
-        this._viewportSize.y * this._dpiMultiplier
-      )
-    } else if (this.gradient) {
-      this._ctx.fillStyle = this.gradient
-      this._ctx.fillRect(
-        0,
-        0,
-        this._viewportSize.x * this._dpiMultiplier,
-        this._viewportSize.y * this._dpiMultiplier
-      )
-    } else {
-      this._ctx.fillStyle = this._backgroundColor
-      this._ctx.fillRect(
-        0,
-        0,
-        this._viewportSize.x * this._dpiMultiplier,
-        this._viewportSize.y * this._dpiMultiplier
-      )
-    }
+    this.clearBackground(this._ctx, this._viewportSize, this.transparentBackground, this.gradient, this._dpiMultiplier)
 
     const particles = this.objectToRender.filter((obj) => obj instanceof Particle)
     const lines = this.objectToRender.filter((obj) => obj instanceof Line)
@@ -69,6 +46,33 @@ export default class Renderer {
 
     if (this._debug) {
       this.drawPerformanceGraphic(this._ctx, this.deltas, this._dpiMultiplier)
+    }
+  }
+
+  clearBackground(ctx, viewportSize, transparentBackground, gradient, dpiMultiplier) {
+    if (transparentBackground) {
+      ctx.clearRect(
+        0,
+        0,
+        viewportSize.x * dpiMultiplier,
+        viewportSize.y * dpiMultiplier
+      )
+    } else if (gradient) {
+      ctx.fillStyle = gradient
+      ctx.fillRect(
+        0,
+        0,
+        viewportSize.x * dpiMultiplier,
+        viewportSize.y * dpiMultiplier
+      )
+    } else {
+      ctx.fillStyle = this._backgroundColor
+      ctx.fillRect(
+        0,
+        0,
+        viewportSize.x * dpiMultiplier,
+        viewportSize.y * dpiMultiplier
+      )
     }
   }
 
@@ -108,8 +112,8 @@ export default class Renderer {
     }
   }
 
-  drawRectangles(ctx, rectangles, dpiMultiplier) {
-    ctx.lineWidth = 1 * dpiMultiplier
+  drawRectangles(ctx, rectangles) {
+    ctx.lineWidth = 0.2
     ctx.strokeStyle = `rgba(255,255,255,1)`
     ctx.beginPath()
     for (const rectangle of rectangles) {
