@@ -35,7 +35,7 @@ export default class Particles {
 
     this._resizeTimeout = null
 
-    window.quad = false
+    window.quad = true
   }
 
   init(settings) {
@@ -216,9 +216,9 @@ export default class Particles {
     if (window.quad) {
       this._quadtree = new QuadTree(this._boundary, 4)
     }
-    const activeParticles = this._particleManager.particles.filter(
-      (p) => p.active
-    )
+
+    const activeParticles = this._particleManager.particles.filter((p) => p.active)
+
     for (const particle of activeParticles) {
       particle.update()
 
@@ -236,7 +236,7 @@ export default class Particles {
       )
     }
 
-    const objectToRender = [...this._particleManager.particles, ...lines]
+    const objectToRender = [...this._particleManager.particles, ...lines, ...this._quadtree.getAllRectangles()]
     this._renderer.objectToRender = objectToRender
     this._renderer.deltas = this._deltas
     this._renderer.render()
@@ -253,7 +253,6 @@ export default class Particles {
     if (this._deltas.length > this._deltas.length - 1) {
       this._deltas.shift()
     }
-    const a = this._deltas.filter((v) => v !== undefined)
 
     return this
   }

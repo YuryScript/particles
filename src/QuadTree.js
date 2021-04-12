@@ -84,4 +84,23 @@ export default class QuadTree {
 
     return result
   }
+
+  getAllRectangles() {
+    const unseenQuadTree = []
+
+    unseenQuadTree.push(this)
+
+    for (let i = 0; i < unseenQuadTree.length; i++) {
+      const quadTree = unseenQuadTree[i]
+
+      if (quadTree.divided) {
+        unseenQuadTree.push(quadTree.northEast)
+        unseenQuadTree.push(quadTree.northWest)
+        unseenQuadTree.push(quadTree.southEast)
+        unseenQuadTree.push(quadTree.southWest)
+      }
+    }
+
+    return unseenQuadTree.map((quadTree) => quadTree.rectangle)
+  }
 }
