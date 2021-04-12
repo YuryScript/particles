@@ -9,29 +9,57 @@ export default class Grid {
 
     this.boundRectangle = boundRectangle
 
+    this.width = boundRectangle.size.x / size.x;
+    this.height = boundRectangle.size.y / size.y;
+
     this.initReactangles(size, boundRectangle)
   }
 
-  initReactangles(size, boundRectangle) {
+  initReactangles(size) {
     for (let x = 0; x < size.x; x++) {
       for (let y = 0; y < size.y; y++) {
-        const width = boundRectangle.size.x / size.x;
-        const height = boundRectangle.size.y / size.y;
-        this.rectangles.push(new BoundRectangle(x * width, y * height, width, height))
+        this.rectangles.push(new BoundRectangle(x * this.width, y * this.height, this.width, this.height))
       }
     }
   }
 
   insert(particle) {
-    const foundRect = this.rectangles.find((rect) => rect.contains(particle.position))
+    const x = Math.floor(particle.position.x / this.width)
+    const y = Math.floor(particle.position.y / this.height)
+
+    const rectIndex = x * y
+    const foundRect = this.rectangles[rectIndex]
+
     if (foundRect) {
       foundRect.particles.push(particle)
-      return true
     }
-    return false
   }
 
   getIntersectedRectangles(circle) {
+    const result = []
+
+    let left = Math.floor(circle.left / this.width)
+    const right = Math.floor(circle.right / this.width)
+    const top = Math.floor(circle.top / this.height)
+    let bottom = Math.floor(circle.bottom / this.height)
+    if (bottom < 0) {
+      bottom = 0
+    }
+
+    if (left < 0) {
+      left = 0
+    }
+
+    for (let x = left; x < right; x++) {
+      for (let y = bottom; y < top; y++) {
+        result.push(this.rectangles[x * y])
+      }
+    }
+
+    return result
+  }
+
+  getIntersectedRectanglesOld(circle) {
     const result = []
 
     for (let i = 0; i < this.rectangles.length; i++) {

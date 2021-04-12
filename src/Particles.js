@@ -40,6 +40,7 @@ export default class Particles {
 
     /** 'default' | 'quadTree' | 'grid' */
     window.method = 'grid'
+    console.log(window.method)
   }
 
   init(settings) {
@@ -361,7 +362,7 @@ export default class Particles {
       height + this._settings.particles.distanceToLink * 2
     )
     this._quadTree = new QuadTree(this._boundary, 4)
-    this.grid = new Grid(new Vector2(10, 10), this._boundary)
+    this.grid = new Grid(new Vector2(25, 25), this._boundary)
 
     return this
   }
