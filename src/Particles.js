@@ -236,8 +236,8 @@ export default class Particles {
       )
     }
 
-    this._renderer.particles = this._particleManager.particles
-    this._renderer.lines = lines
+    const objectToRender = [...this._particleManager.particles, ...lines]
+    this._renderer.objectToRender = objectToRender
     this._renderer.deltas = this._deltas
     this._renderer.render()
 

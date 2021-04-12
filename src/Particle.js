@@ -8,8 +8,6 @@ export class Particle {
 
     this.active = true
 
-    this.letter;
-
     this.radius = 1
   }
 
@@ -22,7 +20,7 @@ export class ParticleManager {
   constructor() {
     this.particles = []
   }
-  
+
   createParticle() {
     const newParticle = new Particle()
     this.particles.push(newParticle)

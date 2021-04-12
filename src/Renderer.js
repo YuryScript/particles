@@ -1,3 +1,5 @@
+import Line from './Line.js'
+import { Particle } from './Particle.js'
 import Vector2 from './Vector2.js'
 
 export default class Renderer {
@@ -7,9 +9,7 @@ export default class Renderer {
     viewportSize = new Vector2(300, 150),
     dpiMultiplier = 1
   ) {
-    this.particles = []
-
-    this.lines = []
+    this.objectToRender = []
 
     this.deltas = []
 
@@ -58,51 +58,38 @@ export default class Renderer {
       )
     }
 
-    const particlesWithLetter = this.particles.filter((p) => Boolean(p.letter))
-    const particlesWithoutLetter = this.particles.filter(
-      (p) => !Boolean(p.letter)
-    )
+    for (const obj of this.objectToRender) {
+      if (obj instanceof Particle) {
+        this._ctx.fillStyle = `rgba(255,255,255,0.5)`
+        this._ctx.beginPath()
+        this._ctx.moveTo(
+          obj.position.x * this._dpiMultiplier,
+          obj.position.y * this._dpiMultiplier
+        )
+        this._ctx.arc(
+          obj.position.x * this._dpiMultiplier,
+          obj.position.y * this._dpiMultiplier,
+          obj.radius * this._dpiMultiplier,
+          0,
+          Math.PI * 2
+        )
+        this._ctx.fill()
+      }
 
-    this._ctx.fillStyle = `rgba(255,255,255,0.7)`
-    this._ctx.font = `${30 * this._dpiMultiplier}px monospace`
-    for (const particle of particlesWithLetter) {
-      this._ctx.fillText(
-        particle.letter,
-        (particle.position.x - 8) * this._dpiMultiplier,
-        (particle.position.y + 10) * this._dpiMultiplier
-      )
-    }
-
-    this._ctx.fillStyle = `rgba(255,255,255,0.5)`
-    this._ctx.beginPath()
-    for (const particle of particlesWithoutLetter) {
-      this._ctx.moveTo(
-        particle.position.x * this._dpiMultiplier,
-        particle.position.y * this._dpiMultiplier
-      )
-      this._ctx.arc(
-        particle.position.x * this._dpiMultiplier,
-        particle.position.y * this._dpiMultiplier,
-        particle.radius * this._dpiMultiplier,
-        0,
-        Math.PI * 2
-      )
-    }
-    this._ctx.fill()
-
-    this._ctx.lineWidth = 1 * this._dpiMultiplier
-    for (const line of this.lines) {
-      this._ctx.beginPath()
-      this._ctx.strokeStyle = `rgba(255,255,255,${line.alpha})`
-      this._ctx.moveTo(
-        line.a.x * this._dpiMultiplier,
-        line.a.y * this._dpiMultiplier
-      )
-      this._ctx.lineTo(
-        line.b.x * this._dpiMultiplier,
-        line.b.y * this._dpiMultiplier
-      )
-      this._ctx.stroke()
+      if (obj instanceof Line) {
+        this._ctx.lineWidth = 1 * this._dpiMultiplier
+        this._ctx.beginPath()
+        this._ctx.strokeStyle = `rgba(255,255,255,${obj.alpha})`
+        this._ctx.moveTo(
+          obj.a.x * this._dpiMultiplier,
+          obj.a.y * this._dpiMultiplier
+        )
+        this._ctx.lineTo(
+          obj.b.x * this._dpiMultiplier,
+          obj.b.y * this._dpiMultiplier
+        )
+        this._ctx.stroke()
+      }
     }
 
     if (this._debug) {
@@ -163,10 +150,8 @@ export default class Renderer {
     this._ctx.closePath()
     this._ctx.stroke()
 
-    const objectAmount = this.particles.length + this.lines.length
-
     this._ctx.fillText(
-      `${objectAmount.toString()} objects`,
+      `${this.objectToRender.length.toString()} objects`,
       0,
       15 * this._dpiMultiplier
     )
