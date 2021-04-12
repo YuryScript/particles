@@ -63,11 +63,12 @@ export default class Renderer {
     const lines = this.objectToRender.filter((obj) => obj instanceof Line)
     const rectangles = this.objectToRender.filter((obj) => obj instanceof Rectangle)
 
-
-
+    this.drawParticles(this._ctx, particles, this._dpiMultiplier)
+    this.drawLines(this._ctx, lines, this._dpiMultiplier)
+    this.drawRectangles(this._ctx, rectangles, this._dpiMultiplier)
 
     if (this._debug) {
-      this.drawPerformanceGraphic()
+      this.drawPerformanceGraphic(this._ctx, this.deltas, this._dpiMultiplier)
     }
   }
 
@@ -117,68 +118,68 @@ export default class Renderer {
     ctx.stroke()
   }
 
-  drawPerformanceGraphic() {
+  drawPerformanceGraphic(ctx, deltas, dpiMultiplier) {
     const normalize = (val, min, max) => (val - min) / (max - min)
 
-    const raw = this.deltas.filter((a) => Boolean(a))
+    const raw = deltas.filter((a) => Boolean(a))
     const min = Math.min(...raw)
     const max = Math.max(...raw)
 
-    this._ctx.font = `${16 * this._dpiMultiplier}px monospace`
-    this._ctx.strokeStyle = `#fff`
-    this._ctx.fillStyle = `#fff`
+    ctx.font = `${16 * dpiMultiplier}px monospace`
+    ctx.strokeStyle = `#fff`
+    ctx.fillStyle = `#fff`
 
     let offsetX = 0
     const startY = 70
 
-    this._ctx.beginPath()
-    this._ctx.moveTo(
-      offsetX * this._dpiMultiplier,
-      (startY - this.deltas[0]) * this._dpiMultiplier
+    ctx.beginPath()
+    ctx.moveTo(
+      offsetX * dpiMultiplier,
+      (startY - deltas[0]) * dpiMultiplier
     )
-    for (const delta of this.deltas) {
+    for (const delta of deltas) {
       const offsetY = startY - 50 * normalize(delta, min, max)
-      this._ctx.lineTo(
-        offsetX * this._dpiMultiplier,
-        offsetY * this._dpiMultiplier
+      ctx.lineTo(
+        offsetX * dpiMultiplier,
+        offsetY * dpiMultiplier
       )
       offsetX += 1
     }
 
-    this._ctx.moveTo(0, startY * this._dpiMultiplier)
-    this._ctx.lineTo(
-      this.deltas.length * this._dpiMultiplier,
-      startY * this._dpiMultiplier
+    ctx.moveTo(0, startY * dpiMultiplier)
+    ctx.lineTo(
+      deltas.length * dpiMultiplier,
+      startY * dpiMultiplier
     )
-    this._ctx.fillText(
+    ctx.fillText(
       min,
-      this.deltas.length * this._dpiMultiplier,
-      (startY + 4) * this._dpiMultiplier
+      deltas.length * dpiMultiplier,
+      (startY + 4) * dpiMultiplier
     )
 
-    this._ctx.moveTo(0, (startY - 50) * this._dpiMultiplier)
-    this._ctx.lineTo(
-      this.deltas.length * this._dpiMultiplier,
-      (startY - 50) * this._dpiMultiplier
+    ctx.moveTo(0, (startY - 50) * dpiMultiplier)
+    ctx.lineTo(
+      deltas.length * dpiMultiplier,
+      (startY - 50) * dpiMultiplier
     )
-    this._ctx.fillText(
+    ctx.fillText(
       max,
-      this.deltas.length * this._dpiMultiplier,
-      (startY - 50 + 4) * this._dpiMultiplier
+      deltas.length * dpiMultiplier,
+      (startY - 50 + 4) * dpiMultiplier
     )
 
-    this._ctx.closePath()
-    this._ctx.stroke()
+    ctx.closePath()
+    ctx.stroke()
 
-    this._ctx.fillText(
+    ctx.fillText(
       `${this.objectToRender.length.toString()} objects`,
       0,
-      15 * this._dpiMultiplier
+      15 * dpiMultiplier
     )
-    this._ctx.fillText(
-      `${this.deltas[this.deltas.length - 1]?.toString()} ms`,
-      130 * this._dpiMultiplier,
-      15 * this._dpiMultiplier
+    ctx.fillText(
+      `${deltas[deltas.length - 1]?.toString()} ms`,
+      130 * dpiMultiplier,
+      15 * dpiMultiplier
     )
   }
 }
