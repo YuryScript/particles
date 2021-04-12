@@ -164,6 +164,7 @@ export default class Renderer {
     this._ctx.stroke()
 
     const objectAmount = this.particles.length + this.lines.length
+
     this._ctx.fillText(
       `${objectAmount.toString()} objects`,
       0,

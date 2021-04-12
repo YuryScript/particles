@@ -213,7 +213,9 @@ export default class Particles {
   _update() {
     const startTime = Date.now()
 
-    this._quadtree = new QuadTree(this._boundary, 4)
+    if (window.quad) {
+      this._quadtree = new QuadTree(this._boundary, 4)
+    }
     const activeParticles = this._particleManager.particles.filter(
       (p) => p.active
     )
@@ -221,7 +223,9 @@ export default class Particles {
       particle.update()
 
       this._checkBoundary(particle, this._boundary)
-      this._quadtree.insert(particle)
+      if (window.quad) {
+        this._quadtree.insert(particle)
+      }
     }
 
     let lines = []
@@ -281,10 +285,6 @@ export default class Particles {
         seenParticles.push(particleA)
 
         for (const particleB of inBoundParticles) {
-          // if (particleA === particleB) {
-          //   continue
-          // }
-
           if (seenParticles.find((value) => value === particleB)) {
             continue
           }
