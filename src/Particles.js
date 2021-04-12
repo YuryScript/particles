@@ -6,6 +6,7 @@ import Line from './Line.js'
 import QuadTree from './QuadTree.js'
 import Circle from './Circle.js'
 import Random from './Random.js'
+import Grid from './Grid.js'
 
 export default class Particles {
   constructor(canvas) {
@@ -31,11 +32,14 @@ export default class Particles {
 
     this._boundary = null
 
-    this._quadtree = null
+    this._quadTree = null
+
+    this.grid = null
 
     this._resizeTimeout = null
 
-    window.quad = true
+    /** 'default' | 'quadTree' | 'grid' */
+    window.method = 'grid'
   }
 
   init(settings) {
@@ -213,8 +217,11 @@ export default class Particles {
   _update() {
     const startTime = Date.now()
 
-    if (window.quad) {
-      this._quadtree = new QuadTree(this._boundary, 4)
+    if (window.method === 'quadTree') {
+      this._quadTree = new QuadTree(this._boundary, 4)
+    }
+    if (window.method === 'grid') {
+      this.grid.clear()
     }
 
     const activeParticles = this._particleManager.particles.filter((p) => p.active)
@@ -223,8 +230,13 @@ export default class Particles {
       particle.update()
 
       this._checkBoundary(particle, this._boundary)
-      if (window.quad) {
-        this._quadtree.insert(particle)
+
+      if (window.method === 'quadTree') {
+        this._quadTree.insert(particle)
+      }
+
+      if (window.method === 'grid') {
+        this.grid.insert(particle)
       }
     }
 
@@ -236,7 +248,7 @@ export default class Particles {
       )
     }
 
-    const objectToRender = [...this._particleManager.particles, ...lines, ...this._quadtree.getAllRectangles()]
+    const objectToRender = [...this._particleManager.particles, ...lines, ...this._quadTree.getAllRectangles(), ...this.grid.rectangles]
     this._renderer.objectToRender = objectToRender
     this._renderer.deltas = this._deltas
     this._renderer.render()
@@ -259,7 +271,7 @@ export default class Particles {
 
   _linkPartiles(particles, distanceToLink) {
     const lines = []
-    if (!window.quad) {
+    if (window.method === 'default') {
       for (let a = 0; a < particles.length - 1; a++) {
         for (let b = a + 1; b < particles.length; b++) {
           const distance = particles[a].position.distance(particles[b].position)
@@ -274,12 +286,14 @@ export default class Particles {
           }
         }
       }
-    } else {
+    }
+
+    if (window.method === 'quadTree') {
       const seenParticles = []
       for (const particleA of particles) {
         const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
 
-        const inBoundParticles = this._quadtree.queryCircle(boundCircle)
+        const inBoundParticles = this._quadTree.queryCircle(boundCircle)
 
         seenParticles.push(particleA)
 
@@ -299,6 +313,33 @@ export default class Particles {
         }
       }
     }
+
+    if (window.method === 'grid') {
+      const seenParticles = []
+      for (const particleA of particles) {
+        const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
+
+        const inBoundParticles = this.grid.queryCircle(boundCircle)
+
+        seenParticles.push(particleA)
+
+        for (const particleB of inBoundParticles) {
+          if (seenParticles.find((value) => value === particleB)) {
+            continue
+          }
+
+          const distance = particleA.position.distance(particleB.position)
+          const line = new Line(
+            Vector2.fromVector(particleA.position),
+            Vector2.fromVector(particleB.position)
+          )
+          const alpha = 1 - distance / distanceToLink
+          line.alpha = alpha
+          lines.push(line)
+        }
+      }
+    }
+
     return lines
   }
 
@@ -319,7 +360,8 @@ export default class Particles {
       width + this._settings.particles.distanceToLink * 2,
       height + this._settings.particles.distanceToLink * 2
     )
-    this._quadtree = new QuadTree(this._boundary, 4)
+    this._quadTree = new QuadTree(this._boundary, 4)
+    this.grid = new Grid(new Vector2(10, 10), this._boundary)
 
     return this
   }

@@ -90,4 +90,12 @@ export default class Rectangle {
 			circle.position.y + circle.radius >= this.bottom
 		)
 	}
+
+	intersectsRectangle(rectangle) {
+		if (Math.abs(this.position.x - rectangle.position.x) > this.size.x / 2 + rectangle.size.x / 2)
+			return false;
+		if (Math.abs(this.position.y - rectangle.position.y) > this.size.y / 2 + rectangle.size.y / 2)
+			return false;
+		return true;
+	}
 }
