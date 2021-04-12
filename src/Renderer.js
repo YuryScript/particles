@@ -1,5 +1,6 @@
 import Line from './Line.js'
 import { Particle } from './Particle.js'
+import Rectangle from './Rectangle.js'
 import Vector2 from './Vector2.js'
 
 export default class Renderer {
@@ -58,43 +59,62 @@ export default class Renderer {
       )
     }
 
-    for (const obj of this.objectToRender) {
-      if (obj instanceof Particle) {
-        this._ctx.fillStyle = `rgba(255,255,255,0.5)`
-        this._ctx.beginPath()
-        this._ctx.moveTo(
-          obj.position.x * this._dpiMultiplier,
-          obj.position.y * this._dpiMultiplier
-        )
-        this._ctx.arc(
-          obj.position.x * this._dpiMultiplier,
-          obj.position.y * this._dpiMultiplier,
-          obj.radius * this._dpiMultiplier,
-          0,
-          Math.PI * 2
-        )
-        this._ctx.fill()
-      }
+    const particles = this.objectToRender.filter((obj) => obj instanceof Particle)
+    const lines = this.objectToRender.filter((obj) => obj instanceof Line)
+    const rectangles = this.objectToRender.filter((obj) => obj instanceof Rectangle)
 
-      if (obj instanceof Line) {
-        this._ctx.lineWidth = 1 * this._dpiMultiplier
-        this._ctx.beginPath()
-        this._ctx.strokeStyle = `rgba(255,255,255,${obj.alpha})`
-        this._ctx.moveTo(
-          obj.a.x * this._dpiMultiplier,
-          obj.a.y * this._dpiMultiplier
-        )
-        this._ctx.lineTo(
-          obj.b.x * this._dpiMultiplier,
-          obj.b.y * this._dpiMultiplier
-        )
-        this._ctx.stroke()
-      }
-    }
+
+
 
     if (this._debug) {
       this.drawPerformanceGraphic()
     }
+  }
+
+  drawParticles(ctx, particles, dpiMultiplier) {
+    ctx.fillStyle = `rgba(255,255,255,0.5)`
+    ctx.beginPath()
+    for (const particle of particles) {
+      ctx.moveTo(
+        particle.position.x * dpiMultiplier,
+        particle.position.y * dpiMultiplier
+      )
+      ctx.arc(
+        particle.position.x * dpiMultiplier,
+        particle.position.y * dpiMultiplier,
+        particle.radius * dpiMultiplier,
+        0,
+        Math.PI * 2
+      )
+    }
+    ctx.fill()
+  }
+
+  drawLines(ctx, lines, dpiMultiplier) {
+    ctx.lineWidth = 1 * dpiMultiplier
+    for (const line of lines) {
+      ctx.strokeStyle = `rgba(255,255,255,${line.alpha})`
+      ctx.beginPath()
+      ctx.moveTo(
+        line.a.x * dpiMultiplier,
+        line.a.y * dpiMultiplier
+      )
+      ctx.lineTo(
+        line.b.x * dpiMultiplier,
+        line.b.y * dpiMultiplier
+      )
+      ctx.stroke()
+    }
+  }
+
+  drawRectangles(ctx, rectangles, dpiMultiplier) {
+    ctx.lineWidth = 1 * dpiMultiplier
+    ctx.strokeStyle = `rgba(255,255,255,1)`
+    ctx.beginPath()
+    for (const rectangle of rectangles) {
+      ctx.rect(rectangle.position.x, rectangle.position.y, rectangle.size.x, rectangle.size.y)
+    }
+    ctx.stroke()
   }
 
   drawPerformanceGraphic() {
