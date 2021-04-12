@@ -34,6 +34,8 @@ export default class Particles {
     this._quadtree = null
 
     this._resizeTimeout = null
+
+    window.quad = false
   }
 
   init(settings) {
@@ -159,17 +161,17 @@ export default class Particles {
     if (settings.renderer.linearGradient) {
       const gradient = this._ctx.createLinearGradient(
         settings.renderer.width *
-          settings.renderer.linearGradient.x1 *
-          this._dpiMultiplier,
+        settings.renderer.linearGradient.x1 *
+        this._dpiMultiplier,
         settings.renderer.height *
-          settings.renderer.linearGradient.y1 *
-          this._dpiMultiplier,
+        settings.renderer.linearGradient.y1 *
+        this._dpiMultiplier,
         settings.renderer.width *
-          settings.renderer.linearGradient.x2 *
-          this._dpiMultiplier,
+        settings.renderer.linearGradient.x2 *
+        this._dpiMultiplier,
         settings.renderer.height *
-          settings.renderer.linearGradient.y2 *
-          this._dpiMultiplier
+        settings.renderer.linearGradient.y2 *
+        this._dpiMultiplier
       )
       gradient.addColorStop(0, settings.renderer.linearGradient.color1)
       gradient.addColorStop(1, settings.renderer.linearGradient.color2)
@@ -254,14 +256,43 @@ export default class Particles {
 
   _linkPartiles(particles, distanceToLink) {
     const lines = []
+    if (!window.quad) {
+      for (let a = 0; a < particles.length - 1; a++) {
+        for (let b = a + 1; b < particles.length; b++) {
+          const distance = particles[a].position.distance(particles[b].position)
+          if (distance < distanceToLink) {
+            const line = new Line(
+              Vector2.fromVector(particles[a].position),
+              Vector2.fromVector(particles[b].position)
+            )
+            const alpha = 1 - distance / distanceToLink
+            line.alpha = alpha
+            lines.push(line)
+          }
+        }
+      }
+    } else {
+      const seenParticles = []
+      for (const particleA of particles) {
+        const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
 
-    for (let a = 0; a < particles.length - 1; a++) {
-      for (let b = a + 1; b < particles.length; b++) {
-        const distance = particles[a].position.distance(particles[b].position)
-        if (distance < distanceToLink) {
+        const inBoundParticles = this._quadtree.queryCircle(boundCircle)
+
+        seenParticles.push(particleA)
+
+        for (const particleB of inBoundParticles) {
+          // if (particleA === particleB) {
+          //   continue
+          // }
+
+          if (seenParticles.find((value) => value === particleB)) {
+            continue
+          }
+
+          const distance = particleA.position.distance(particleB.position)
           const line = new Line(
-            Vector2.fromVector(particles[a].position),
-            Vector2.fromVector(particles[b].position)
+            Vector2.fromVector(particleA.position),
+            Vector2.fromVector(particleB.position)
           )
           const alpha = 1 - distance / distanceToLink
           line.alpha = alpha
@@ -269,27 +300,6 @@ export default class Particles {
         }
       }
     }
-
-    // for (const particleA of particles) {
-    // 	const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
-    // 	const inBoundParticles = this._quadtree.queryCircle(boundCircle)
-
-    // 	for (const particleB of inBoundParticles) {
-    // 		if (particleA === particleB) {
-    // 			continue
-    // 		}
-
-    // 		const distance = particleA.position.distance(particleB.position)
-    // 		const line = new Line(
-    // 			Vector2.fromVector(particleA.position),
-    // 			Vector2.fromVector(particleB.position)
-    // 		)
-    // 		const alpha = 1 - distance / distanceToLink
-    // 		line.alpha = alpha
-    // 		lines.push(line)
-    // 	}
-    // }
-
     return lines
   }
 

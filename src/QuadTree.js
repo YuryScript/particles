@@ -58,7 +58,7 @@ export default class QuadTree {
   }
 
   queryCircle(circle) {
-    const res = []
+    const result = []
     const unseenQuadTree = []
 
     unseenQuadTree.push(this)
@@ -69,7 +69,7 @@ export default class QuadTree {
       if (quadTree.rectangle.intersectsCircle(circle)) {
         for (const p of quadTree.points) {
           if (circle.intersectsPoint(p.position)) {
-            res.push(p)
+            result.push(p)
           }
         }
 
@@ -82,6 +82,6 @@ export default class QuadTree {
       }
     }
 
-    return res
+    return result
   }
 }

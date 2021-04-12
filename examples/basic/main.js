@@ -6,9 +6,9 @@ const settings = {
   debug: true, // boolean
   resize: true,
   particles: {
-    amount: 250, // number
+    amount: 2000, // number
     moveDirection: 'random', // 'random' | 'top'  | 'right'  | 'bottom'  | 'left'
-    distanceToLink: 150, // number
+    distanceToLink: 20, // number
     linkedParticles: true, // boolean
     maxVelocity: 0.8, // number
     maxRadius: 4, // number
