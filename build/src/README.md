@@ -63,7 +63,9 @@ new Particles(canvas)
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 ## History
+
 1.2.0 New grid structure & optimization
+
 1.0.0 Release
 ## License
 MIT
