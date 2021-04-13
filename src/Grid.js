@@ -5,6 +5,8 @@ export default class Grid {
   constructor(size = new Vector2(1, 1), boundRectangle = new Rectangle(0, 0, 100, 100)) {
     this.rectangles = []
 
+    this.boundRectangles = []
+
     this.size = size
 
     this.boundRectangle = boundRectangle
@@ -36,57 +38,44 @@ export default class Grid {
   }
 
   getIntersectedRectangles(circle) {
-    const result = []
+    const left = Math.floor(circle.left / this.width)
+    const right = Math.ceil(circle.right / this.width)
+    const bottom = Math.floor(circle.bottom / this.height)
+    const top = Math.ceil(circle.top / this.height)
 
-    let left = Math.floor(circle.left / this.width)
-    const right = Math.floor(circle.right / this.width)
-    const top = Math.floor(circle.top / this.height)
-    let bottom = Math.floor(circle.bottom / this.height)
-    if (bottom < 0) {
-      bottom = 0
-    }
+    const boundRectangle = new BoundRectangle(
+      left * this.width,
+      top * this.height,
+      (right - left) * this.width,
+      (bottom - top) * this.height
+    )
 
-    if (left < 0) {
-      left = 0
-    }
+    this.boundRectangles.push(boundRectangle)
 
     for (let x = left; x < right; x++) {
       for (let y = bottom; y < top; y++) {
-        result.push(this.rectangles[x * y])
+        const foundRect = this.rectangles[x * y]
+        if (foundRect) {
+          boundRectangle.particles = [...boundRectangle.particles, ...foundRect.particles]
+        }
       }
     }
 
-    return result
-  }
-
-  getIntersectedRectanglesOld(circle) {
-    const result = []
-
-    for (let i = 0; i < this.rectangles.length; i++) {
-      const rect = this.rectangles[i]
-
-      if (rect.intersectsCircle(circle)) {
-        result.push(rect)
-      }
-    }
-
-    return result
+    return boundRectangle
   }
 
   queryCircle(circle) {
     const result = []
 
-    const rectangles = this.getIntersectedRectangles(circle)
+    const boundRectangle = this.getIntersectedRectangles(circle)
 
-    for (let i = 0; i < rectangles.length; i++) {
-      const rect = rectangles[i]
+    if (!boundRectangle) {
+      return result
+    }
 
-      for (const particle of rect.particles) {
-
-        if (circle.intersectsPoint(particle.position)) {
-          result.push(particle)
-        }
-
+    for (const particle of boundRectangle.particles) {
+      if (circle.intersectsPoint(particle.position)) {
+        result.push(particle)
       }
     }
 
@@ -97,6 +86,7 @@ export default class Grid {
     for (const rect of this.rectangles) {
       rect.particles = []
     }
+    this.boundRectangles = []
   }
 }
 

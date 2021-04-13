@@ -130,7 +130,7 @@ export default class Particles {
       }
       particle.velocity = velocity
 
-      particle.radius = Random.floatBetween(0, settings.particles.maxRadius)
+      particle.radius = Random.floatBetween(1, settings.particles.maxRadius)
     }
 
     if (settings.staticParticles) {
@@ -249,7 +249,7 @@ export default class Particles {
       )
     }
 
-    const objectToRender = [...this._particleManager.particles, ...lines, ...this._quadTree.getAllRectangles(), ...this.grid.rectangles]
+    const objectToRender = [...this._particleManager.particles, ...lines, ...this._quadTree.getAllRectangles()]
     this._renderer.objectToRender = objectToRender
     this._renderer.deltas = this._deltas
     this._renderer.render()
@@ -320,7 +320,6 @@ export default class Particles {
       const seenParticles = []
       for (const particleA of particles) {
         const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
-        lines.push(boundCircle)
 
         const inBoundParticles = this.grid.queryCircle(boundCircle)
 
@@ -364,7 +363,7 @@ export default class Particles {
       height + this._settings.particles.distanceToLink * 2
     )
     this._quadTree = new QuadTree(this._boundary, 4)
-    this.grid = new Grid(new Vector2(10, 10), this._boundary)
+    this.grid = new Grid(new Vector2(40, 40), this._boundary)
 
     return this
   }
