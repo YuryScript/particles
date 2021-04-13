@@ -131,7 +131,7 @@ export default class Renderer {
     ctx.beginPath()
     for (const circle of circles) {
       ctx.moveTo(
-        circle.position.x * dpiMultiplier,
+        circle.position.x + circle.radius * dpiMultiplier,
         circle.position.y * dpiMultiplier
       )
       ctx.arc(
