@@ -1,3 +1,4 @@
+import Circle from './Circle.js'
 import Line from './Line.js'
 import { Particle } from './Particle.js'
 import Rectangle from './Rectangle.js'
@@ -39,10 +40,12 @@ export default class Renderer {
     const particles = this.objectToRender.filter((obj) => obj instanceof Particle)
     const lines = this.objectToRender.filter((obj) => obj instanceof Line)
     const rectangles = this.objectToRender.filter((obj) => obj instanceof Rectangle)
+    const circles = this.objectToRender.filter((obj) => obj instanceof Circle)
 
     this.drawParticles(this._ctx, particles, this._dpiMultiplier)
     this.drawLines(this._ctx, lines, this._dpiMultiplier)
     this.drawRectangles(this._ctx, rectangles, this._dpiMultiplier)
+    this.drawCircles(this._ctx, circles, this._dpiMultiplier)
 
     if (this._debug) {
       this.drawPerformanceGraphic(this._ctx, this.deltas, this._dpiMultiplier)
@@ -118,6 +121,26 @@ export default class Renderer {
     ctx.beginPath()
     for (const rectangle of rectangles) {
       ctx.rect(rectangle.position.x, rectangle.position.y, rectangle.size.x, rectangle.size.y)
+    }
+    ctx.stroke()
+  }
+
+  drawCircles(ctx, circles, dpiMultiplier) {
+    ctx.lineWidth = 0.2
+    ctx.strokeStyle = `rgba(255,255,255,0.5)`
+    ctx.beginPath()
+    for (const circle of circles) {
+      ctx.moveTo(
+        circle.position.x * dpiMultiplier,
+        circle.position.y * dpiMultiplier
+      )
+      ctx.arc(
+        circle.position.x * dpiMultiplier,
+        circle.position.y * dpiMultiplier,
+        circle.radius * dpiMultiplier,
+        0,
+        Math.PI * 2
+      )
     }
     ctx.stroke()
   }

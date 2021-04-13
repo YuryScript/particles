@@ -272,6 +272,7 @@ export default class Particles {
 
   _linkPartiles(particles, distanceToLink) {
     const lines = []
+
     if (window.method === 'default') {
       for (let a = 0; a < particles.length - 1; a++) {
         for (let b = a + 1; b < particles.length; b++) {
@@ -319,6 +320,7 @@ export default class Particles {
       const seenParticles = []
       for (const particleA of particles) {
         const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
+        lines.push(boundCircle)
 
         const inBoundParticles = this.grid.queryCircle(boundCircle)
 
@@ -362,7 +364,7 @@ export default class Particles {
       height + this._settings.particles.distanceToLink * 2
     )
     this._quadTree = new QuadTree(this._boundary, 4)
-    this.grid = new Grid(new Vector2(25, 25), this._boundary)
+    this.grid = new Grid(new Vector2(10, 10), this._boundary)
 
     return this
   }
