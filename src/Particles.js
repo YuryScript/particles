@@ -39,8 +39,7 @@ export default class Particles {
     this._resizeTimeout = null
 
     /** 'default' | 'quadTree' | 'grid' */
-    window.method = 'grid'
-    console.log(window.method)
+    this.method = 'grid'
   }
 
   init(settings) {
@@ -218,10 +217,10 @@ export default class Particles {
   _update() {
     const startTime = Date.now()
 
-    if (window.method === 'quadTree') {
+    if (this.method === 'quadTree') {
       this._quadTree = new QuadTree(this._boundary, 4)
     }
-    if (window.method === 'grid') {
+    if (this.method === 'grid') {
       this.grid.clear()
     }
 
@@ -232,11 +231,11 @@ export default class Particles {
 
       this._checkBoundary(particle, this._boundary)
 
-      if (window.method === 'quadTree') {
+      if (this.method === 'quadTree') {
         this._quadTree.insert(particle)
       }
 
-      if (window.method === 'grid') {
+      if (this.method === 'grid') {
         this.grid.insert(particle)
       }
     }
@@ -249,7 +248,7 @@ export default class Particles {
       )
     }
 
-    const objectToRender = [...this._particleManager.particles, ...lines, ...this._quadTree.getAllRectangles()]
+    const objectToRender = [...this._particleManager.particles, ...lines]
     this._renderer.objectToRender = objectToRender
     this._renderer.deltas = this._deltas
     this._renderer.render()
@@ -273,7 +272,7 @@ export default class Particles {
   _linkPartiles(particles, distanceToLink) {
     const lines = []
 
-    if (window.method === 'default') {
+    if (this.method === 'default') {
       for (let a = 0; a < particles.length - 1; a++) {
         for (let b = a + 1; b < particles.length; b++) {
           const distance = particles[a].position.distance(particles[b].position)
@@ -290,7 +289,7 @@ export default class Particles {
       }
     }
 
-    if (window.method === 'quadTree') {
+    if (this.method === 'quadTree') {
       const seenParticles = []
       for (const particleA of particles) {
         const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
@@ -316,7 +315,7 @@ export default class Particles {
       }
     }
 
-    if (window.method === 'grid') {
+    if (this.method === 'grid') {
       const seenParticles = []
       for (const particleA of particles) {
         const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
@@ -363,7 +362,10 @@ export default class Particles {
       height + this._settings.particles.distanceToLink * 2
     )
     this._quadTree = new QuadTree(this._boundary, 4)
-    this.grid = new Grid(new Vector2(10, 10), this._boundary)
+
+    const gridX = Math.floor(this._boundary.size.x / this._settings.particles.distanceToLink / 2.5)
+    const gridY = Math.floor(this._boundary.size.y / this._settings.particles.distanceToLink / 2.5)
+    this.grid = new Grid(new Vector2(gridX, gridY), this._boundary)
 
     return this
   }

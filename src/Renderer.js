@@ -35,7 +35,7 @@ export default class Renderer {
   }
 
   render() {
-    this.clearBackground(this._ctx, this._viewportSize, this.transparentBackground, this.gradient, this._dpiMultiplier)
+    this.drawBackground(this._ctx, this._viewportSize, this.transparentBackground, this.gradient, this._dpiMultiplier)
 
     const particles = this.objectToRender.filter((obj) => obj instanceof Particle)
     const lines = this.objectToRender.filter((obj) => obj instanceof Line)
@@ -52,7 +52,7 @@ export default class Renderer {
     }
   }
 
-  clearBackground(ctx, viewportSize, transparentBackground, gradient, dpiMultiplier) {
+  drawBackground(ctx, viewportSize, transparentBackground, gradient, dpiMultiplier) {
     if (transparentBackground) {
       ctx.clearRect(
         0,
@@ -152,6 +152,7 @@ export default class Renderer {
     const min = Math.min(...raw)
     const max = Math.max(...raw)
 
+    ctx.lineWidth = 1
     ctx.font = `${16 * dpiMultiplier}px monospace`
     ctx.strokeStyle = `#fff`
     ctx.fillStyle = `#fff`
