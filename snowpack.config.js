@@ -8,15 +8,15 @@ module.exports = {
     src: { url: "/src", static: false, resolve: true },
   },
   plugins: [
-    [
-      "@snowpack/plugin-optimize",
-      {
-        minifyJS: true,
-        minifyCSS: true,
-        minifyHTML: true,
-        preloadModules: true,
-      }
-    ],
+    // [
+    //   "@snowpack/plugin-optimize",
+    //   {
+    //     minifyJS: true,
+    //     minifyCSS: true,
+    //     minifyHTML: true,
+    //     preloadModules: true,
+    //   }
+    // ],
   ],
   packageOptions: {
     /* ... */
