@@ -7,26 +7,10 @@ module.exports = {
     examples: { url: "/", static: true, resolve: true },
     src: { url: "/src", static: false, resolve: true },
   },
-  plugins: [
-    // [
-    //   "@snowpack/plugin-optimize",
-    //   {
-    //     minifyJS: true,
-    //     minifyCSS: true,
-    //     minifyHTML: true,
-    //     preloadModules: true,
-    //   }
-    // ],
-  ],
-  packageOptions: {
-    /* ... */
-  },
-  devOptions: {
-    /* ... */
-  },
-  buildOptions: {
-    /* ... */
-  },
+  plugins: [],
+  packageOptions: {},
+  devOptions: {},
+  buildOptions: {},
   optimize: {
     bundle: true,
     minify: true,
