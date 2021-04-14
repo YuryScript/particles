@@ -10,45 +10,47 @@ import Grid from './Grid.js'
 
 export default class Particles {
   constructor(canvas) {
-    this._canvas = canvas
+    this.canvas = canvas
 
-    this._ctx = this._canvas.getContext('2d')
+    this.ctx = this.canvas.getContext('2d')
 
-    this._particleManager = null
+    this.particleManager = null
 
-    this._dpiMultiplier = null
+    this.dpiMultiplier = null
 
-    this._renderer = null
+    this.renderer = null
 
-    this._boundUpdate = this._update.bind(this)
+    this.boundUpdate = this.update.bind(this)
 
-    this._isRunning = false
+    this.isRunning = false
 
-    this._ticks = 0
+    this.ticks = 0
 
-    this._deltas = new Array(200)
+    this.deltas = new Array(150)
 
-    this._debug = false
+    this.debug = false
 
-    this._boundary = null
+    this.boundary = null
 
-    this._quadTree = null
+    this.quadTree = null
 
     this.grid = null
 
-    this._resizeTimeout = null
+    this.resizeTimeout = null
+
+    this.settings = null
 
     /** 'default' | 'quadTree' | 'grid' */
     this.method = 'default'
   }
 
   init(settings) {
-    this._settings = settings
+    this.settings = settings
 
-    this._particleManager = new ParticleManager()
+    this.particleManager = new ParticleManager()
 
     for (let a = 0; a < settings.particles.amount; a++) {
-      const particle = this._particleManager.createParticle()
+      const particle = this.particleManager.createParticle()
 
       particle.position.set(
         Random.intBetween(
@@ -134,7 +136,7 @@ export default class Particles {
 
     if (settings.staticParticles) {
       for (const coords of settings.staticParticles) {
-        const p = this._particleManager.createParticle()
+        const p = this.particleManager.createParticle()
         p.active = false
         p.radius = 0
         p.position.set(
@@ -145,94 +147,94 @@ export default class Particles {
     }
 
     if (settings.renderer.dpiMultiplier) {
-      this._dpiMultiplier = settings.renderer.dpiMultiplier
+      this.dpiMultiplier = settings.renderer.dpiMultiplier
     } else {
-      this._dpiMultiplier = 1
+      this.dpiMultiplier = 1
     }
 
-    this._renderer = new Renderer(
-      this._ctx,
+    this.renderer = new Renderer(
+      this.ctx,
       settings.renderer.backgroundColor,
       new Vector2(),
-      this._dpiMultiplier
+      this.dpiMultiplier
     )
 
-    this._renderer.transparentBackground =
+    this.renderer.transparentBackground =
       settings.renderer.transparentBackground
 
-    this._setSize(settings.renderer.width, settings.renderer.height)
+    this.setSize(settings.renderer.width, settings.renderer.height)
 
     if (settings.renderer.linearGradient) {
-      const gradient = this._ctx.createLinearGradient(
+      const gradient = this.ctx.createLinearGradient(
         settings.renderer.width *
         settings.renderer.linearGradient.x1 *
-        this._dpiMultiplier,
+        this.dpiMultiplier,
         settings.renderer.height *
         settings.renderer.linearGradient.y1 *
-        this._dpiMultiplier,
+        this.dpiMultiplier,
         settings.renderer.width *
         settings.renderer.linearGradient.x2 *
-        this._dpiMultiplier,
+        this.dpiMultiplier,
         settings.renderer.height *
         settings.renderer.linearGradient.y2 *
-        this._dpiMultiplier
+        this.dpiMultiplier
       )
       gradient.addColorStop(0, settings.renderer.linearGradient.color1)
       gradient.addColorStop(1, settings.renderer.linearGradient.color2)
-      this._renderer.gradient = gradient
+      this.renderer.gradient = gradient
     }
 
-    this.debug = settings.debug
+    this.renderer.debug = settings.debug
 
     if (settings.resize) {
-      window.addEventListener('resize', this._onResize.bind(this))
+      window.addEventListener('resize', this.onResize.bind(this))
     }
 
     return this
   }
 
-  _onResize() {
-    if (this._resizeTimeout) {
-      clearTimeout(this._resizeTimeout)
+  onResize() {
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout)
     }
-    this._resizeTimeout = setTimeout(
-      () => this._setSize(window.innerWidth, window.innerHeight),
+    this.resizeTimeout = setTimeout(
+      () => this.setSize(window.innerWidth, window.innerHeight),
       100
     )
   }
 
   start() {
-    this._isRunning = true
-    window.requestAnimationFrame(this._boundUpdate)
+    this.isRunning = true
+    window.requestAnimationFrame(this.boundUpdate)
 
     console.info('Spark Partilces started!')
     return this
   }
 
   stop() {
-    this._isRunning = false
+    this.isRunning = false
     return this
   }
 
-  _update() {
+  update() {
     const startTime = Date.now()
 
     if (this.method === 'quadTree') {
-      this._quadTree = new QuadTree(this._boundary, 4)
+      this.quadTree = new QuadTree(this.boundary, 4)
     }
     if (this.method === 'grid') {
       this.grid.clear()
     }
 
-    const activeParticles = this._particleManager.particles.filter((p) => p.active)
+    const activeParticles = this.particleManager.particles.filter((p) => p.active)
 
     for (const particle of activeParticles) {
       particle.update()
 
-      this._checkBoundary(particle, this._boundary)
+      this.checkBoundary(particle, this.boundary)
 
       if (this.method === 'quadTree') {
-        this._quadTree.insert(particle)
+        this.quadTree.insert(particle)
       }
 
       if (this.method === 'grid') {
@@ -241,35 +243,35 @@ export default class Particles {
     }
 
     let lines = []
-    if (this._settings.particles.linkedParticles) {
-      lines = this._linkPartiles(
-        this._particleManager.particles,
-        this._settings.particles.distanceToLink
+    if (this.settings.particles.linkedParticles) {
+      lines = this.linkPartiles(
+        this.particleManager.particles,
+        this.settings.particles.distanceToLink
       )
     }
 
-    const objectToRender = [...this._particleManager.particles, ...lines]
-    this._renderer.objectToRender = objectToRender
-    this._renderer.deltas = this._deltas
-    this._renderer.render()
+    const objectToRender = [...this.particleManager.particles, ...lines]
+    this.renderer.objectToRender = objectToRender
+    this.renderer.deltas = this.deltas
+    this.renderer.render()
 
-    if (this._isRunning) {
-      window.requestAnimationFrame(this._boundUpdate)
+    if (this.isRunning) {
+      window.requestAnimationFrame(this.boundUpdate)
     }
 
-    this._ticks++
+    this.ticks++
 
     const endTime = Date.now()
     const delta = endTime - startTime
-    this._deltas.push(delta)
-    if (this._deltas.length > this._deltas.length - 1) {
-      this._deltas.shift()
+    this.deltas.push(delta)
+    if (this.deltas.length > this.deltas.length - 1) {
+      this.deltas.shift()
     }
 
     return this
   }
 
-  _linkPartiles(particles, distanceToLink) {
+  linkPartiles(particles, distanceToLink) {
     const lines = []
 
     if (this.method === 'default') {
@@ -294,7 +296,7 @@ export default class Particles {
       for (const particleA of particles) {
         const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
 
-        const inBoundParticles = this._quadTree.queryCircle(boundCircle)
+        const inBoundParticles = this.quadTree.queryCircle(boundCircle)
 
         seenParticles.push(particleA)
 
@@ -344,42 +346,33 @@ export default class Particles {
     return lines
   }
 
-  oneFrame = this._update
+  oneFrame = this.update
 
-  _setSize(width, height) {
-    this._canvas.style.width = width.toString() + 'px'
-    this._canvas.style.height = height.toString() + 'px'
+  setSize(width, height) {
+    this.canvas.style.width = width.toString() + 'px'
+    this.canvas.style.height = height.toString() + 'px'
 
-    this._canvas.width = width * this._dpiMultiplier
-    this._canvas.height = height * this._dpiMultiplier
+    this.canvas.width = width * this.dpiMultiplier
+    this.canvas.height = height * this.dpiMultiplier
 
-    this._renderer.viewportSize = new Vector2(width, height)
+    this.renderer.viewportSize = new Vector2(width, height)
 
-    this._boundary = new Rectangle(
-      -this._settings.particles.distanceToLink,
-      -this._settings.particles.distanceToLink,
-      width + this._settings.particles.distanceToLink * 2,
-      height + this._settings.particles.distanceToLink * 2
+    this.boundary = new Rectangle(
+      -this.settings.particles.distanceToLink,
+      -this.settings.particles.distanceToLink,
+      width + this.settings.particles.distanceToLink * 2,
+      height + this.settings.particles.distanceToLink * 2
     )
-    this._quadTree = new QuadTree(this._boundary, 4)
+    this.quadTree = new QuadTree(this.boundary, 4)
 
-    const gridX = Math.floor(this._boundary.size.x / this._settings.particles.distanceToLink / 2.5)
-    const gridY = Math.floor(this._boundary.size.y / this._settings.particles.distanceToLink / 2.5)
-    this.grid = new Grid(new Vector2(gridX, gridY), this._boundary)
+    const gridX = Math.floor(this.boundary.size.x / this.settings.particles.distanceToLink / 2.5)
+    const gridY = Math.floor(this.boundary.size.y / this.settings.particles.distanceToLink / 2.5)
+    this.grid = new Grid(new Vector2(gridX, gridY), this.boundary)
 
     return this
   }
 
-  get debug() {
-    return this._debug
-  }
-
-  set debug(v) {
-    this._debug = v
-    this._renderer._debug = v
-  }
-
-  _checkBoundary(particle, boundary) {
+  checkBoundary(particle, boundary) {
     if (particle.position.x < boundary.left) {
       particle.position.x = boundary.right
       return

@@ -17,38 +17,34 @@ export default class Renderer {
 
     this.gradient = null
 
-    this._dpiMultiplier = dpiMultiplier
+    this.dpiMultiplier = dpiMultiplier
 
-    this._ctx = ctx
+    this.ctx = ctx
 
-    this._debug = false
+    this.debug = false
 
-    this._viewportSize = viewportSize
+    this.viewportSize = viewportSize
 
     this.transparentBackground = true
 
-    this._backgroundColor = backgroundColor
-  }
-
-  set viewportSize(value) {
-    this._viewportSize = value
+    this.backgroundColor = backgroundColor
   }
 
   render() {
-    this.drawBackground(this._ctx, this._viewportSize, this.transparentBackground, this.gradient, this._dpiMultiplier)
+    this.drawBackground(this.ctx, this.viewportSize, this.transparentBackground, this.gradient, this.dpiMultiplier)
 
     const particles = this.objectToRender.filter((obj) => obj instanceof Particle)
     const lines = this.objectToRender.filter((obj) => obj instanceof Line)
     const rectangles = this.objectToRender.filter((obj) => obj instanceof Rectangle)
     const circles = this.objectToRender.filter((obj) => obj instanceof Circle)
 
-    this.drawParticles(this._ctx, particles, this._dpiMultiplier)
-    this.drawLines(this._ctx, lines, this._dpiMultiplier)
-    this.drawRectangles(this._ctx, rectangles, this._dpiMultiplier)
-    this.drawCircles(this._ctx, circles, this._dpiMultiplier)
+    this.drawParticles(this.ctx, particles, this.dpiMultiplier)
+    this.drawLines(this.ctx, lines, this.dpiMultiplier)
+    this.drawRectangles(this.ctx, rectangles, this.dpiMultiplier)
+    this.drawCircles(this.ctx, circles, this.dpiMultiplier)
 
-    if (this._debug) {
-      this.drawPerformanceGraphic(this._ctx, this.deltas, this._dpiMultiplier)
+    if (this.debug) {
+      this.drawPerformanceGraphic(this.ctx, this.deltas, this.dpiMultiplier)
     }
   }
 
@@ -69,7 +65,7 @@ export default class Renderer {
         viewportSize.y * dpiMultiplier
       )
     } else {
-      ctx.fillStyle = this._backgroundColor
+      ctx.fillStyle = this.backgroundColor
       ctx.fillRect(
         0,
         0,
@@ -168,7 +164,7 @@ export default class Renderer {
     for (const delta of deltas) {
       const offsetY = startY - 50 * normalize(delta, min, max)
       ctx.lineTo(
-        offsetX * dpiMultiplier,
+        offsetX * 2 * dpiMultiplier,
         offsetY * dpiMultiplier
       )
       offsetX += 1
@@ -176,23 +172,23 @@ export default class Renderer {
 
     ctx.moveTo(0, startY * dpiMultiplier)
     ctx.lineTo(
-      deltas.length * dpiMultiplier,
+      deltas.length * 2 * dpiMultiplier,
       startY * dpiMultiplier
     )
     ctx.fillText(
       min,
-      deltas.length * dpiMultiplier,
+      deltas.length * 2 * dpiMultiplier,
       (startY + 4) * dpiMultiplier
     )
 
     ctx.moveTo(0, (startY - 50) * dpiMultiplier)
     ctx.lineTo(
-      deltas.length * dpiMultiplier,
+      deltas.length * 2 * dpiMultiplier,
       (startY - 50) * dpiMultiplier
     )
     ctx.fillText(
       max,
-      deltas.length * dpiMultiplier,
+      deltas.length * 2 * dpiMultiplier,
       (startY - 50 + 4) * dpiMultiplier
     )
 
