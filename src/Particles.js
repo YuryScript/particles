@@ -26,7 +26,7 @@ export default class Particles {
 
     this._ticks = 0
 
-    this._deltas = new Array(200)
+    this._deltas = new Array(150)
 
     this._debug = false
 
@@ -262,9 +262,7 @@ export default class Particles {
     const endTime = Date.now()
     const delta = endTime - startTime
     this._deltas.push(delta)
-    if (this._deltas.length > this._deltas.length - 1) {
-      this._deltas.shift()
-    }
+    this._deltas.shift()
 
     return this
   }

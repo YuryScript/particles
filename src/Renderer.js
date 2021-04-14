@@ -171,28 +171,28 @@ export default class Renderer {
         offsetX * dpiMultiplier,
         offsetY * dpiMultiplier
       )
-      offsetX += 1
+      offsetX += 2
     }
 
     ctx.moveTo(0, startY * dpiMultiplier)
     ctx.lineTo(
-      deltas.length * dpiMultiplier,
+      deltas.length * 2 * dpiMultiplier,
       startY * dpiMultiplier
     )
     ctx.fillText(
       min,
-      deltas.length * dpiMultiplier,
+      deltas.length * 2 * dpiMultiplier,
       (startY + 4) * dpiMultiplier
     )
 
     ctx.moveTo(0, (startY - 50) * dpiMultiplier)
     ctx.lineTo(
-      deltas.length * dpiMultiplier,
+      deltas.length * 2 * dpiMultiplier,
       (startY - 50) * dpiMultiplier
     )
     ctx.fillText(
       max,
-      deltas.length * dpiMultiplier,
+      deltas.length * 2 * dpiMultiplier,
       (startY - 50 + 4) * dpiMultiplier
     )
 
@@ -206,7 +206,7 @@ export default class Renderer {
     )
     ctx.fillText(
       `${deltas[deltas.length - 1]?.toString()} ms`,
-      130 * dpiMultiplier,
+      150 * dpiMultiplier,
       15 * dpiMultiplier
     )
   }
