@@ -1,4 +1,4 @@
-import Particles from '../../src/Particles.js'
+import Particles from '../build/src/Particles.js'
 
 const node = document.getElementById('particles')
 

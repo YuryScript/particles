@@ -39,7 +39,7 @@ export default class Particles {
     this._resizeTimeout = null
 
     /** 'default' | 'quadTree' | 'grid' */
-    this.method = 'grid'
+    this.method = 'default'
   }
 
   init(settings) {
