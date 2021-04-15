@@ -164,7 +164,7 @@ export default class Renderer {
     for (const delta of deltas) {
       const offsetY = startY - 50 * normalize(delta, min, max)
       ctx.lineTo(
-        offsetX * 2 * dpiMultiplier,
+        offsetX * dpiMultiplier,
         offsetY * dpiMultiplier
       )
       offsetX += 2
