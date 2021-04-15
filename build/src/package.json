@@ -1,6 +1,6 @@
 {
   "name": "spark-particles",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Lightweight and fast Particle library written in JavaScript",
   "main": "./Particles.js",
   "scripts": {
