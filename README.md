@@ -1,4 +1,5 @@
 # Spark Particles
+
 ![version](https://img.shields.io/npm/v/spark-particles?style=for-the-badge)
 ![license](https://img.shields.io/npm/l/spark-particles?style=for-the-badge)
 ![language](https://img.shields.io/github/languages/top/gelltorn/particles?style=for-the-badge)
@@ -11,33 +12,36 @@ Lightweight and fast Particle library written in JavaScript
 
 Zero Dependencies!
 
-[Basic example](https://gelltorn.github.io/particles/build/examples/basic/)
+[Basic example](https://gelltorn.github.io/particles/examples/basic/)
 
 ## Installation
+
 1. `npm i spark-particles --save`
 2. Done!
+
 ## Usage
+
 See Basic example
 
 ```javascript
-import Particles from "spark-particles"
+import Particles from 'spark-particles'
 
-const canvas = document.getElementById("particles")
+const canvas = document.getElementById('particles')
 
 const settings = {
   debug: false, // boolean
   resize: true, // boolean
   particles: {
     amount: 250, // number
-    moveDirection: 'random', // 'random' | 'top'  | 'right'  | 'bottom'  | 'left' 
+    moveDirection: 'random', // 'random' | 'top'  | 'right'  | 'bottom'  | 'left'
     distanceToLink: 150, // number
     linkedParticles: true, // boolean
     maxVelocity: 0.8, // number
-    maxRadius: 4 // number
+    maxRadius: 4, // number
   },
   renderer: {
     transparentBackground: false, // boolean
-    backgroundColor: "#186cb6", // color
+    backgroundColor: '#186cb6', // color
     linearGradient: {
       x1: 0, // number
       y1: 0, // number
@@ -51,21 +55,23 @@ const settings = {
   },
 }
 
-new Particles(canvas)
-  .init(settings)
-  .start()
-
+new Particles(canvas).init(settings).start()
 ```
+
 ## Contributing
+
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
+
 ## History
 
 1.2.0 New grid structure & optimization
 
 1.0.0 Release
+
 ## License
+
 MIT

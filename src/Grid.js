@@ -1,8 +1,11 @@
-import Rectangle from "./Rectangle"
-import Vector2 from "./Vector2"
+import Rectangle from './Rectangle.js'
+import Vector2 from './Vector2.js'
 
 export default class Grid {
-  constructor(size = new Vector2(1, 1), boundRectangle = new Rectangle(0, 0, 100, 100)) {
+  constructor(
+    size = new Vector2(1, 1),
+    boundRectangle = new Rectangle(0, 0, 100, 100)
+  ) {
     this.rectangles = []
 
     this.boundRectangles = []
@@ -11,8 +14,8 @@ export default class Grid {
 
     this.boundRectangle = boundRectangle
 
-    this.width = boundRectangle.size.x / size.x;
-    this.height = boundRectangle.size.y / size.y;
+    this.width = boundRectangle.size.x / size.x
+    this.height = boundRectangle.size.y / size.y
 
     this.initReactangles(size, boundRectangle)
   }
@@ -20,7 +23,14 @@ export default class Grid {
   initReactangles(size) {
     for (let x = 0; x < size.x; x++) {
       for (let y = 0; y < size.y; y++) {
-        this.rectangles.push(new BoundRectangle(x * this.width, y * this.height, this.width, this.height))
+        this.rectangles.push(
+          new BoundRectangle(
+            x * this.width,
+            y * this.height,
+            this.width,
+            this.height
+          )
+        )
       }
     }
   }
@@ -56,7 +66,10 @@ export default class Grid {
       for (let y = bottom; y < top; y++) {
         const foundRect = this.rectangles[x * y]
         if (foundRect) {
-          boundRectangle.particles = [...boundRectangle.particles, ...foundRect.particles]
+          boundRectangle.particles = [
+            ...boundRectangle.particles,
+            ...foundRect.particles,
+          ]
         }
       }
     }
