@@ -1,4 +1,4 @@
-import Rectangle from "./Rectangle.js"
+import Rectangle from './Rectangle.js'
 
 export default class QuadTree {
   constructor(rectangle, capacity) {
@@ -10,13 +10,13 @@ export default class QuadTree {
 
     this.divided = false
 
-    this.northEast
+    this.northEast = null
 
-    this.northWest
+    this.northWest = null
 
-    this.southEast
+    this.southEast = null
 
-    this.southWest
+    this.southWest = null
   }
 
   subdivide() {
@@ -27,9 +27,18 @@ export default class QuadTree {
     const capacity = this.capacity
 
     this.northEast = new QuadTree(new Rectangle(x, y, w / 2, h / 2), capacity)
-    this.northWest = new QuadTree(new Rectangle(x + w / 2, y, w / 2, h / 2), capacity)
-    this.southEast = new QuadTree(new Rectangle(x, y + h / 2, w / 2, h / 2), capacity)
-    this.southWest = new QuadTree(new Rectangle(x + w / 2, y + h / 2, w / 2, h / 2), capacity)
+    this.northWest = new QuadTree(
+      new Rectangle(x + w / 2, y, w / 2, h / 2),
+      capacity
+    )
+    this.southEast = new QuadTree(
+      new Rectangle(x, y + h / 2, w / 2, h / 2),
+      capacity
+    )
+    this.southWest = new QuadTree(
+      new Rectangle(x + w / 2, y + h / 2, w / 2, h / 2),
+      capacity
+    )
     this.divided = true
   }
 
@@ -102,5 +111,14 @@ export default class QuadTree {
     }
 
     return unseenQuadTree.map((quadTree) => quadTree.rectangle)
+  }
+
+  clear() {
+    this.points = []
+    this.divided = false
+    this.northEast = null
+    this.northWest = null
+    this.southEast = null
+    this.southWest = null
   }
 }

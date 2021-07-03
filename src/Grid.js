@@ -8,36 +8,34 @@ export default class Grid {
   ) {
     this.rectangles = []
 
-    this.boundRectangles = []
-
     this.size = size
 
     this.boundRectangle = boundRectangle
 
-    this.width = boundRectangle.size.x / size.x
-    this.height = boundRectangle.size.y / size.y
+    this.rectWidth = boundRectangle.size.x / size.x
+    this.rectHeight = boundRectangle.size.y / size.y
 
     this.initReactangles(size, boundRectangle)
+
+    console.log(this)
   }
 
   initReactangles(size) {
     for (let x = 0; x < size.x; x++) {
       for (let y = 0; y < size.y; y++) {
+        const rectX = x * this.rectWidth + this.boundRectangle.position.x
+        const rectY = y * this.rectHeight + this.boundRectangle.position.y
+
         this.rectangles.push(
-          new BoundRectangle(
-            x * this.width,
-            y * this.height,
-            this.width,
-            this.height
-          )
+          new BoundRectangle(rectX, rectY, this.rectWidth, this.rectHeight)
         )
       }
     }
   }
 
   insert(particle) {
-    const x = Math.floor(particle.position.x / this.width)
-    const y = Math.floor(particle.position.y / this.height)
+    const x = Math.floor(particle.position.x / this.rectWidth)
+    const y = Math.floor(particle.position.y / this.rectHeight)
 
     const rectIndex = x * y
     const foundRect = this.rectangles[rectIndex]
@@ -48,19 +46,17 @@ export default class Grid {
   }
 
   getIntersectedRectangles(circle) {
-    const left = Math.floor(circle.left / this.width)
-    const right = Math.ceil(circle.right / this.width)
-    const bottom = Math.floor(circle.bottom / this.height)
-    const top = Math.ceil(circle.top / this.height)
+    const left = Math.floor(circle.left / this.rectWidth)
+    const right = Math.ceil(circle.right / this.rectWidth)
+    const bottom = Math.floor(circle.bottom / this.rectHeight)
+    const top = Math.ceil(circle.top / this.rectHeight)
 
     const boundRectangle = new BoundRectangle(
-      left * this.width,
-      top * this.height,
-      (right - left) * this.width,
-      (bottom - top) * this.height
+      left * this.rectWidth,
+      top * this.rectHeight,
+      (right - left) * this.rectWidth,
+      (bottom - top) * this.rectHeight
     )
-
-    this.boundRectangles.push(boundRectangle)
 
     for (let x = left; x < right; x++) {
       for (let y = bottom; y < top; y++) {
@@ -99,7 +95,6 @@ export default class Grid {
     for (const rect of this.rectangles) {
       rect.particles = []
     }
-    this.boundRectangles = []
   }
 }
 

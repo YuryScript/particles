@@ -1,12 +1,10 @@
-import Vector2 from "./Vector2.js"
+import Vector2 from './Vector2.js'
 
 export class Particle {
   constructor() {
     this.position = new Vector2()
 
     this.velocity = new Vector2()
-
-    this.active = true
 
     this.radius = 1
   }

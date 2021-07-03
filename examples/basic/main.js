@@ -4,11 +4,9 @@ const node = document.getElementById('particles')
 
 const settings = {
   debug: true, // boolean
-  resize: true,
   particles: {
-    amount: 400, // number
-    moveDirection: 'random', // 'random' | 'top'  | 'right'  | 'bottom'  | 'left'
-    distanceToLink: 100, // number
+    amount: 150, // number
+    distanceToLink: 150, // number
     linkedParticles: true, // boolean
     maxVelocity: 0.8, // number
     maxRadius: 4, // number
@@ -24,7 +22,6 @@ const settings = {
     },
     width: window.innerWidth, // number
     height: window.innerHeight, // number
-    dpiMultiplier: 1,
   },
 }
 

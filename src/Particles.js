@@ -16,8 +16,6 @@ export default class Particles {
 
     this.particleManager = null
 
-    this.dpiMultiplier = null
-
     this.renderer = null
 
     this.boundUpdate = this.update.bind(this)
@@ -32,16 +30,12 @@ export default class Particles {
 
     this.boundary = null
 
-    this.quadTree = null
-
-    this.grid = null
-
-    this.resizeTimeout = null
+    this.spatialGrid = null
 
     this.settings = null
 
     /** 'default' | 'quadTree' | 'grid' */
-    this.method = 'default'
+    this.method = 'grid'
   }
 
   init(settings) {
@@ -64,99 +58,25 @@ export default class Particles {
       )
 
       const velocity = new Vector2()
-      const alpha = 3
-      const beta = 4
-      switch (settings.particles.moveDirection) {
-        case 'top':
-          velocity.set(
-            Random.floatBetween(
-              -settings.particles.maxVelocity / alpha,
-              settings.particles.maxVelocity / alpha
-            ),
-            Random.floatBetween(
-              -settings.particles.maxVelocity,
-              -settings.particles.maxVelocity / beta
-            )
-          )
-          break
-        case 'right':
-          velocity.set(
-            Random.floatBetween(
-              settings.particles.maxVelocity,
-              settings.particles.maxVelocity / beta
-            ),
-            Random.floatBetween(
-              -settings.particles.maxVelocity / alpha,
-              settings.particles.maxVelocity / alpha
-            )
-          )
-          break
-        case 'bottom':
-          velocity.set(
-            Random.floatBetween(
-              -settings.particles.maxVelocity / alpha,
-              settings.particles.maxVelocity / alpha
-            ),
-            Random.floatBetween(
-              settings.particles.maxVelocity,
-              settings.particles.maxVelocity / beta
-            )
-          )
-          break
-        case 'left':
-          velocity.set(
-            Random.floatBetween(
-              -settings.particles.maxVelocity,
-              -settings.particles.maxVelocity / beta
-            ),
-            Random.floatBetween(
-              -settings.particles.maxVelocity / alpha,
-              settings.particles.maxVelocity / alpha
-            )
-          )
-          break
-        default:
-        case 'random':
-          velocity.set(
-            Random.floatBetween(
-              -settings.particles.maxVelocity,
-              settings.particles.maxVelocity
-            ),
-            Random.floatBetween(
-              -settings.particles.maxVelocity,
-              settings.particles.maxVelocity
-            )
-          )
-          break
-      }
+      velocity.set(
+        Random.floatBetween(
+          -settings.particles.maxVelocity,
+          settings.particles.maxVelocity
+        ),
+        Random.floatBetween(
+          -settings.particles.maxVelocity,
+          settings.particles.maxVelocity
+        )
+      )
       particle.velocity = velocity
 
       particle.radius = Random.floatBetween(1, settings.particles.maxRadius)
     }
 
-    if (settings.staticParticles) {
-      for (const coords of settings.staticParticles) {
-        const p = this.particleManager.createParticle()
-        p.active = false
-        p.radius = 0
-        p.position.set(
-          settings.renderer.width * coords[0],
-          settings.renderer.height * coords[1]
-        )
-      }
-    }
-
-    if (settings.renderer.dpiMultiplier) {
-      this.dpiMultiplier = settings.renderer.dpiMultiplier
-    } else {
-      this.dpiMultiplier = 1
-    }
-
     this.renderer = new Renderer(
       this.ctx,
       settings.renderer.backgroundColor,
-      new Vector2(),
-      this.dpiMultiplier
+      new Vector2()
     )
 
     this.renderer.transparentBackground =
@@ -164,20 +84,14 @@ export default class Particles {
 
     this.setSize(settings.renderer.width, settings.renderer.height)
 
+    this.changeSpatialGridTo(this.method)
+
     if (settings.renderer.linearGradient) {
       const gradient = this.ctx.createLinearGradient(
-        settings.renderer.width *
-        settings.renderer.linearGradient.x1 *
-        this.dpiMultiplier,
-        settings.renderer.height *
-        settings.renderer.linearGradient.y1 *
-        this.dpiMultiplier,
-        settings.renderer.width *
-        settings.renderer.linearGradient.x2 *
-        this.dpiMultiplier,
-        settings.renderer.height *
-        settings.renderer.linearGradient.y2 *
-        this.dpiMultiplier
+        settings.renderer.width * settings.renderer.linearGradient.x1,
+        settings.renderer.height * settings.renderer.linearGradient.y1,
+        settings.renderer.width * settings.renderer.linearGradient.x2,
+        settings.renderer.height * settings.renderer.linearGradient.y2
       )
       gradient.addColorStop(0, settings.renderer.linearGradient.color1)
       gradient.addColorStop(1, settings.renderer.linearGradient.color2)
@@ -186,21 +100,7 @@ export default class Particles {
 
     this.renderer.debug = settings.debug
 
-    if (settings.resize) {
-      window.addEventListener('resize', this.onResize.bind(this))
-    }
-
     return this
-  }
-
-  onResize() {
-    if (this.resizeTimeout) {
-      clearTimeout(this.resizeTimeout)
-    }
-    this.resizeTimeout = setTimeout(
-      () => this.setSize(window.innerWidth, window.innerHeight),
-      100
-    )
   }
 
   start() {
@@ -219,38 +119,41 @@ export default class Particles {
   update() {
     const startTime = Date.now()
 
-    if (this.method === 'quadTree') {
-      this.quadTree = new QuadTree(this.boundary, 4)
-    }
-    if (this.method === 'grid') {
-      this.grid.clear()
+    const particles = this.particleManager.particles
+    const distanceToLink = this.settings.particles.distanceToLink
+
+    switch (this.method) {
+      case 'quadTree':
+      case 'grid':
+        this.spatialGrid.clear()
+        break
+      default:
+        break
     }
 
-    const activeParticles = this.particleManager.particles.filter((p) => p.active)
-
-    for (const particle of activeParticles) {
+    for (const particle of particles) {
       particle.update()
 
       this.checkBoundary(particle, this.boundary)
 
-      if (this.method === 'quadTree') {
-        this.quadTree.insert(particle)
-      }
-
-      if (this.method === 'grid') {
-        this.grid.insert(particle)
+      switch (this.method) {
+        case 'quadTree':
+        case 'grid':
+          this.spatialGrid.insert(particle)
+          break
+        default:
+          break
       }
     }
 
     let lines = []
     if (this.settings.particles.linkedParticles) {
-      lines = this.linkPartiles(
-        this.particleManager.particles,
-        this.settings.particles.distanceToLink
-      )
+      lines = this.linkPartiles(particles, distanceToLink)
     }
 
-    const objectToRender = [...this.particleManager.particles, ...lines]
+    const objectToRender = this.spatialGrid
+      ? [...particles, ...lines, ...this.spatialGrid.rectangles]
+      : [...particles, ...lines]
     this.renderer.objectToRender = objectToRender
     this.renderer.deltas = this.deltas
     this.renderer.render()
@@ -270,74 +173,106 @@ export default class Particles {
   }
 
   linkPartiles(particles, distanceToLink) {
-    const lines = []
+    let lines = []
 
-    if (this.method === 'default') {
-      for (let a = 0; a < particles.length - 1; a++) {
-        for (let b = a + 1; b < particles.length; b++) {
-          const distance = particles[a].position.distance(particles[b].position)
-          if (distance < distanceToLink) {
+    switch (this.method) {
+      case 'quadTree': {
+        const seenParticles = []
+        for (const particleA of particles) {
+          const boundCircle = new Circle(
+            particleA.position.x,
+            particleA.position.y,
+            distanceToLink
+          )
+
+          const inBoundParticles = this.spatialGrid.queryCircle(boundCircle)
+
+          seenParticles.push(particleA)
+
+          for (const particleB of inBoundParticles) {
+            if (seenParticles.find((value) => value === particleB)) {
+              continue
+            }
+
+            const distance = particleA.position.distance(particleB.position)
             const line = new Line(
-              Vector2.fromVector(particles[a].position),
-              Vector2.fromVector(particles[b].position)
+              Vector2.fromVector(particleA.position),
+              Vector2.fromVector(particleB.position)
             )
             const alpha = 1 - distance / distanceToLink
             line.alpha = alpha
             lines.push(line)
           }
         }
+        break
       }
-    }
+      case 'grid': {
+        for (const particle of particles) {
+          const pointA = particle.position
 
-    if (this.method === 'quadTree') {
-      const seenParticles = []
-      for (const particleA of particles) {
-        const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
-
-        const inBoundParticles = this.quadTree.queryCircle(boundCircle)
-
-        seenParticles.push(particleA)
-
-        for (const particleB of inBoundParticles) {
-          if (seenParticles.find((value) => value === particleB)) {
-            continue
-          }
-
-          const distance = particleA.position.distance(particleB.position)
-          const line = new Line(
-            Vector2.fromVector(particleA.position),
-            Vector2.fromVector(particleB.position)
+          const boundCircle = new Circle(
+            particle.position.x,
+            particle.position.y,
+            distanceToLink
           )
-          const alpha = 1 - distance / distanceToLink
-          line.alpha = alpha
-          lines.push(line)
+
+          const inBoundPoints = this.spatialGrid
+            .queryCircle(boundCircle)
+            .map((a) => a.position)
+          // console.log(particle, inBoundParticles)
+
+          for (const pointB of inBoundPoints) {
+            if (pointA === pointB) {
+              continue
+            }
+
+            const distance = pointA.distance(pointB)
+            const line = new Line(
+              Vector2.fromVector(pointA),
+              Vector2.fromVector(pointB)
+            )
+            const alpha = 1 - distance / distanceToLink
+            line.alpha = alpha
+            lines.push(line)
+          }
         }
+        // console.log(lines)
+        const filtredLines = []
+        for (let i = 0; i < lines.length - 1; i++) {
+          const lineA = lines[i]
+          let isAdd = true
+          for (let j = i + 1; j < lines.length; j++) {
+            const lineB = lines[j]
+            if (lineA.a.equals(lineB.b) && lineA.b.equals(lineB.a)) {
+              isAdd = false
+            }
+          }
+          if (isAdd) {
+            filtredLines.push(lineA)
+          }
+        }
+        if (lines.length) filtredLines.push(lines[lines.length - 1])
+        lines = filtredLines
+        break
       }
-    }
-
-    if (this.method === 'grid') {
-      const seenParticles = []
-      for (const particleA of particles) {
-        const boundCircle = new Circle(particleA.position.x, particleA.position.y, distanceToLink)
-
-        const inBoundParticles = this.grid.queryCircle(boundCircle)
-
-        seenParticles.push(particleA)
-
-        for (const particleB of inBoundParticles) {
-          if (seenParticles.find((value) => value === particleB)) {
-            continue
+      default: {
+        for (let a = 0; a < particles.length - 1; a++) {
+          for (let b = a + 1; b < particles.length; b++) {
+            const distance = particles[a].position.distance(
+              particles[b].position
+            )
+            if (distance < distanceToLink) {
+              const line = new Line(
+                Vector2.fromVector(particles[a].position),
+                Vector2.fromVector(particles[b].position)
+              )
+              const alpha = 1 - distance / distanceToLink
+              line.alpha = alpha
+              lines.push(line)
+            }
           }
-
-          const distance = particleA.position.distance(particleB.position)
-          const line = new Line(
-            Vector2.fromVector(particleA.position),
-            Vector2.fromVector(particleB.position)
-          )
-          const alpha = 1 - distance / distanceToLink
-          line.alpha = alpha
-          lines.push(line)
         }
+        break
       }
     }
 
@@ -350,8 +285,8 @@ export default class Particles {
     this.canvas.style.width = width.toString() + 'px'
     this.canvas.style.height = height.toString() + 'px'
 
-    this.canvas.width = width * this.dpiMultiplier
-    this.canvas.height = height * this.dpiMultiplier
+    this.canvas.width = width
+    this.canvas.height = height
 
     this.renderer.viewportSize = new Vector2(width, height)
 
@@ -361,11 +296,6 @@ export default class Particles {
       width + this.settings.particles.distanceToLink * 2,
       height + this.settings.particles.distanceToLink * 2
     )
-    this.quadTree = new QuadTree(this.boundary, 4)
-
-    const gridX = Math.floor(this.boundary.size.x / this.settings.particles.distanceToLink / 2.5)
-    const gridY = Math.floor(this.boundary.size.y / this.settings.particles.distanceToLink / 2.5)
-    this.grid = new Grid(new Vector2(gridX, gridY), this.boundary)
 
     return this
   }
@@ -388,6 +318,33 @@ export default class Particles {
 
     if (particle.position.y > boundary.bottom) {
       particle.position.y = boundary.top
+    }
+  }
+
+  changeSpatialGridTo(gridName) {
+    this.method = gridName
+
+    switch (gridName) {
+      case 'grid': {
+        const gridCellsX = Math.floor(
+          this.boundary.size.x / this.settings.particles.distanceToLink / 2.5
+        )
+        const gridCellsY = Math.floor(
+          this.boundary.size.y / this.settings.particles.distanceToLink / 2.5
+        )
+        this.spatialGrid = new Grid(
+          new Vector2(gridCellsX, gridCellsY),
+          this.boundary
+        )
+        break
+      }
+      case 'quadTree': {
+        this.quadTree = new QuadTree(this.boundary, 4)
+        break
+      }
+      default: {
+        this.spatialGrid = null
+      }
     }
   }
 }
